@@ -24,8 +24,7 @@ public final class CarParkFileHandler {
 	 * @return
 	 */
 	public static String read(final String id) {
-		final String file_path = Config.CAR_PARK_FILE_FOLDER
-				+ Config.CAR_PARK_FILE_PREFIX + id;
+		final String file_path = Config.CAR_PARK_FILE_FOLDER + Config.CAR_PARK_FILE_PREFIX + id + ".xml";
 
 		BufferedReader br;
 		final StringBuilder sb = new StringBuilder();
@@ -58,8 +57,7 @@ public final class CarParkFileHandler {
 	 * @return
 	 */
 	public static boolean save(CarPark carPark, String id) {
-		final String file_path = Config.CAR_PARK_FILE_FOLDER
-				+ Config.CAR_PARK_FILE_PREFIX + id + ".xml";
+		final String file_path = Config.CAR_PARK_FILE_FOLDER + Config.CAR_PARK_FILE_PREFIX + id + ".xml";
 
 		BufferedWriter out = null;
 
