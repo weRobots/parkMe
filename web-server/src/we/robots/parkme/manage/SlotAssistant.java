@@ -9,27 +9,33 @@ import we.robots.parkme.park.Slot;
 import we.robots.parkme.util.CommonUtil;
 
 public class SlotAssistant {
-	private final Set<Slot> slots;
+	private final HashMap<String, Slot> slots;
 
-	public SlotAssistant(final Set<Slot> slots) {
+	public SlotAssistant(final HashMap<String, Slot> slots) {
 		this.slots = slots;
 	}
 
-	public static int toId(final Slot slot) {
+	/**
+	 * @param slot
+	 * @return
+	 */
+	public static String toId(final Slot slot) {
 		return slot.getId();
 	}
 
-	private Slot getSlot(final int slotId) {
-		for (final Slot slot : slots) {
-			if (slot.getId() == slotId) {
-				return slot;
-			}
-		}
-
-		return null;
+	/**
+	 * @param slotId
+	 * @return
+	 */
+	public Slot getSlot(final String slotId) {
+		return slots.get(slotId);
 	}
 
-	public Set<Slot> identifyBlockingSlots(final int slotId) {
+	/**
+	 * @param slotId
+	 * @return
+	 */
+	public Set<Slot> identifyBlockingSlots(final String slotId) {
 		final Set<Slot> slotsToMove = new HashSet<Slot>();
 		final Slot slotToLeave = getSlot(slotId);
 		Set<Slot> immidiateUpSlots = getImmediateUpSlots(slotToLeave);
@@ -58,10 +64,11 @@ public class SlotAssistant {
 		}
 
 		final Set<Slot> immediateUpSlots = new HashSet<Slot>();
-		final HashMap<Direction, Slot> navigationDetail = slot
+		final HashMap<Direction, String> navigationDetail = slot
 				.getNavigationDetail();
-		final Slot leftUp = navigationDetail.get(Direction.LEFT_FRONT);
-		final Slot rightUp = navigationDetail.get(Direction.RIGHT_FRONT);
+		final Slot leftUp = getSlot(navigationDetail.get(Direction.LEFT_FRONT));
+		final Slot rightUp = getSlot(navigationDetail
+				.get(Direction.RIGHT_FRONT));
 
 		// if same only one will b added
 		CommonUtil.addSafely(immediateUpSlots, leftUp);
@@ -69,5 +76,4 @@ public class SlotAssistant {
 
 		return immediateUpSlots;
 	}
-
 }

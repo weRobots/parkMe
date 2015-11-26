@@ -2,20 +2,37 @@ package we.robots.parkme.park;
 
 import java.util.HashMap;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 import we.robots.parkme.user.User;
 
+@XStreamAlias("slot")
 public class Slot {
-	private int id;
-	private int level;
-	private SlotStatus status;
-	private User user;
-	private HashMap<Direction, Slot> navigationDetail;
+	//
+	@XStreamAlias("id")
+	private String id;
 
-	public int getId() {
+	//
+	@XStreamAlias("level")
+	private int level;
+
+	//
+	@XStreamAlias("status")
+	private SlotStatus status;
+
+	//
+	@XStreamAlias("user")
+	private User user;
+
+	//
+	@XStreamAlias("navigation")
+	private HashMap<Direction, String> navigationDetail;
+
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
@@ -23,7 +40,7 @@ public class Slot {
 		return level;
 	}
 
-	public void setLevel(int level) {
+	public void setLevel(final int level) {
 		this.level = level;
 	}
 
@@ -31,7 +48,7 @@ public class Slot {
 		return status;
 	}
 
-	public void setStatus(SlotStatus status) {
+	public void setStatus(final SlotStatus status) {
 		this.status = status;
 	}
 
@@ -39,16 +56,16 @@ public class Slot {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(final User user) {
 		this.user = user;
 	}
 
-	public HashMap<Direction, Slot> getNavigationDetail() {
+	public HashMap<Direction, String> getNavigationDetail() {
 		return navigationDetail;
 	}
 
-	public void setNavigationDetail(HashMap<Direction, Slot> navigationDetail) {
+	public void setNavigationDetail(
+			final HashMap<Direction, String> navigationDetail) {
 		this.navigationDetail = navigationDetail;
 	}
-
 }

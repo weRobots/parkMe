@@ -1,6 +1,7 @@
 package we.robots.parkme.util;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Set;
 
 import we.robots.parkme.park.Slot;
@@ -56,5 +57,19 @@ public final class CommonUtil {
 
 		throw new IllegalArgumentException(
 				"arguments are not valid for the operation");
+	}
+
+	/**
+	 * @param slots
+	 * @return
+	 */
+	public static HashMap<String, Slot> convert(Set<Slot> slots) {
+		HashMap<String, Slot> map = new HashMap<String, Slot>();
+
+		for (Slot slot : slots) {
+			map.put(slot.getId(), slot);
+		}
+
+		return map;
 	}
 }
