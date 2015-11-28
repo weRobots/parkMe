@@ -1,22 +1,24 @@
 package com.robots.we.parkme;
 
+import android.content.Context;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
-import android.widget.TextView;
+import com.robots.we.parkme.network.HttpRequestHandler;
+import com.robots.we.parkme.network.NetworkConnectivityReceiver;
+
+import java.io.IOException;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -29,6 +31,15 @@ public class HomeActivity extends AppCompatActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
+
+    /**
+     * Whether there is any internet connection.
+     */
+    private static boolean dataConnected = false;
+    /**
+     * The BroadcastReceiver that tracks network connectivity changes.
+     */
+    private NetworkConnectivityReceiver connectivityReceiver;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -57,10 +68,50 @@ public class HomeActivity extends AppCompatActivity {
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                refreshUserOperationPage();
             }
         });
+
+        // Register BroadcastReceiver to track connection changes.
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        connectivityReceiver = new NetworkConnectivityReceiver();
+        this.registerReceiver(connectivityReceiver, filter);
+    }
+
+    // Refreshes the user operation display if the network connection is available.
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // update data connection availability on start up
+        updateConnectedFlags();
+
+        // refresh user operation page
+        refreshUserOperationPage();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (connectivityReceiver != null) {
+            this.unregisterReceiver(connectivityReceiver);
+        }
+    }
+
+    private void refreshUserOperationPage() {
+        if (dataConnected) {
+            // AsyncTask subclass
+            new RefreshTask().execute("empty");
+        } else {
+            showErrorPage();
+        }
+    }
+
+    // Displays an error if the app is unable to load content.
+    private void showErrorPage() {
+        // setContentView(R.layout.main);
+
+        // The specified network connection is not available. Displays error message.
     }
 
     @Override
@@ -83,5 +134,36 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // Checks the network connection and sets the variables accordingly.
+    private void updateConnectedFlags() {
+        ConnectivityManager connMgr =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeInfo = connMgr.getActiveNetworkInfo();
+        dataConnected = (activeInfo != null && activeInfo.isConnected());
+    }
+
+    // Implementation of AsyncTask used to download the latest car park XML and convert it.
+    private class RefreshTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... urls) {
+            try {
+                return HttpRequestHandler.refresh();
+            } catch (IOException e) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            // create car park view again for the latest server information
+            if (result != null)
+            {
+                System.out.println("COOOOOOL.....");
+            }
+        }
     }
 }
