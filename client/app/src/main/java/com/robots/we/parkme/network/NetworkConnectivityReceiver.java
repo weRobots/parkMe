@@ -44,7 +44,7 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
     }
 
     public interface ConnectivityStatusChangedListener {
-        public ConnectivityStatus ConnectivityStatusChanged(ConnectivityStatus status);
+        public void ConnectivityStatusChanged(ConnectivityStatus status);
     }
 
     public enum ConnectivityStatus {

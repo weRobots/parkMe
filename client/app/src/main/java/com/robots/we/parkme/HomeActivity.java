@@ -14,13 +14,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.robots.we.parkme.network.HttpRequestHandler;
 import com.robots.we.parkme.network.NetworkConnectivityReceiver;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 import java.io.IOException;
 
-public class HomeActivity extends AppCompatActivity {
+import we.robots.parkme.park.CarPark;
+
+public class HomeActivity extends AppCompatActivity implements NetworkConnectivityReceiver.ConnectivityStatusChangedListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -75,6 +80,7 @@ public class HomeActivity extends AppCompatActivity {
         // Register BroadcastReceiver to track connection changes.
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         connectivityReceiver = new NetworkConnectivityReceiver();
+        connectivityReceiver.registerConnectivityStatusChangedListener(this);
         this.registerReceiver(connectivityReceiver, filter);
     }
 
@@ -109,9 +115,10 @@ public class HomeActivity extends AppCompatActivity {
 
     // Displays an error if the app is unable to load content.
     private void showErrorPage() {
-        // setContentView(R.layout.main);
+        // TODO
 
         // The specified network connection is not available. Displays error message.
+        Toast.makeText(getApplicationContext(), R.string.connection_error, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -145,6 +152,19 @@ public class HomeActivity extends AppCompatActivity {
         dataConnected = (activeInfo != null && activeInfo.isConnected());
     }
 
+    @Override
+    public void ConnectivityStatusChanged(NetworkConnectivityReceiver.ConnectivityStatus status) {
+/*        switch (status) {
+            case CONNECTED:
+                dataConnected = true;
+                Toast.makeText(getApplicationContext(), R.string.connection_ok, Toast.LENGTH_SHORT).show();
+            case DISCONNECTED:
+                Toast.makeText(getApplicationContext(), R.string.connection_lost, Toast.LENGTH_SHORT).show();
+                dataConnected = false;
+        }*/
+        dataConnected = true;
+    }
+
     // Implementation of AsyncTask used to download the latest car park XML and convert it.
     private class RefreshTask extends AsyncTask<String, Void, String> {
 
@@ -160,9 +180,9 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             // create car park view again for the latest server information
-            if (result != null)
-            {
-                System.out.println("COOOOOOL.....");
+            if (result != null) {
+                XStream stream = new XStream(new StaxDriver());
+                CarPark latest = (CarPark) stream.fromXML(result);
             }
         }
     }

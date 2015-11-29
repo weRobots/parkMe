@@ -3,6 +3,7 @@ package we.robots.parkme.park;
 import java.util.HashMap;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
 import we.robots.parkme.user.User;
 
@@ -10,6 +11,7 @@ import we.robots.parkme.user.User;
 public class Slot {
 	//
 	@XStreamAlias("id")
+	@XStreamAsAttribute
 	private String id;
 
 	//
@@ -23,6 +25,10 @@ public class Slot {
 	//
 	@XStreamAlias("user")
 	private User user;
+
+	//
+	@XStreamAlias("type")
+	private SlotType slotType;
 
 	//
 	@XStreamAlias("navigation")
@@ -64,8 +70,15 @@ public class Slot {
 		return navigationDetail;
 	}
 
-	public void setNavigationDetail(
-			final HashMap<Direction, String> navigationDetail) {
+	public void setNavigationDetail(final HashMap<Direction, String> navigationDetail) {
 		this.navigationDetail = navigationDetail;
+	}
+
+	public SlotType getSlotType() {
+		return slotType;
+	}
+
+	public void setSlotType(SlotType slotType) {
+		this.slotType = slotType;
 	}
 }

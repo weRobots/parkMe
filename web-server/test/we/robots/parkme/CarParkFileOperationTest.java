@@ -9,6 +9,7 @@ import we.robots.parkme.manage.SlotAssistant;
 import we.robots.parkme.park.CarPark;
 import we.robots.parkme.park.Direction;
 import we.robots.parkme.park.Slot;
+import we.robots.parkme.park.SlotType;
 import we.robots.parkme.util.CarParkFileHandler;
 import we.robots.parkme.util.CommonUtil;
 
@@ -26,13 +27,13 @@ public class CarParkFileOperationTest {
 		for (int i = 1; i < 19; i++) {
 			final Slot slot = new Slot();
 			slot.setId(Integer.toString(i));
+			slot.setSlotType(SlotType.VERTICLE);
 			slot.setNavigationDetail(createNewNavigateDetail());
 			slots.add(slot);
 		}
 
 		// link slots
-		final SlotAssistant slotAssistant = new SlotAssistant(
-				CommonUtil.convert(slots));
+		final SlotAssistant slotAssistant = new SlotAssistant(CommonUtil.convert(slots));
 
 		// slot 01
 		final Slot slot_1 = slotAssistant.getSlot("1");
@@ -60,10 +61,12 @@ public class CarParkFileOperationTest {
 
 		// slot 07
 		final Slot slot_7 = slotAssistant.getSlot("7");
+		slot_7.setSlotType(SlotType.HORIZONTAL);
 		setNabours(slot_7, 3, "8", "8", "6", "6", null, null, "11", "12");
 
 		// slot 08
 		final Slot slot_8 = slotAssistant.getSlot("8");
+		slot_8.setSlotType(SlotType.HORIZONTAL);
 		setNabours(slot_8, 4, null, null, "7", "7", null, null, "12", "13");
 
 		// slot 09
@@ -115,9 +118,8 @@ public class CarParkFileOperationTest {
 		return new HashMap<Direction, String>();
 	}
 
-	private void setNabours(final Slot slot, final int level, final String bl,
-			final String br, final String fl, final String fr, final String lf,
-			final String lb, final String rf, final String rb) {
+	private void setNabours(final Slot slot, final int level, final String bl, final String br, final String fl,
+			final String fr, final String lf, final String lb, final String rf, final String rb) {
 		slot.setLevel(level);
 
 		final HashMap<Direction, String> detail = slot.getNavigationDetail();
