@@ -22,6 +22,7 @@ public class CarParkFileOperationTest {
 
 	private CarPark createOfficeCarPark() {
 		final CarPark office = new CarPark();
+		office.setId("01");
 		final HashSet<Slot> slots = new HashSet<Slot>();
 
 		for (int i = 1; i < 19; i++) {

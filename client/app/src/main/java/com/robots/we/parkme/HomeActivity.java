@@ -16,10 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.robots.we.parkme.network.CarParkFileOperationTest;
+import com.robots.we.parkme.beans.CarPark;
+import com.robots.we.parkme.convert.CarParkXMLParser;
+import com.robots.we.parkme.network.HttpRequestHandler;
 import com.robots.we.parkme.network.NetworkConnectivityReceiver;
 
-import we.robots.parkme.park.CarPark;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class HomeActivity extends AppCompatActivity implements NetworkConnectivityReceiver.ConnectivityStatusChangedListener {
 
@@ -178,28 +181,24 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
 
         @Override
         protected String doInBackground(String... urls) {
-/*            try {
-                return HttpRequestHandler.refresh();
+            try {
+                // create car park view again for the latest server information
+                InputStream result = HttpRequestHandler.refresh();
+                if (result != null) {
+                    if (HomeActivity.this.carParkViewBuilder != null) {
+                        HomeActivity.this.carParkViewBuilder.build(CarParkXMLParser.parse(result));
+                    }
+                }
+
+                return null;
             } catch (IOException e) {
                 return null;
-            }*/
-
-            return "";
+            }
         }
 
         @Override
         protected void onPostExecute(String result) {
-            // create car park view again for the latest server information
-            if (result != null) {
-               /* XStream stream = new XStream(new StaxDriver());
-                CarPark latest = (CarPark) stream.fromXML(result);*/
 
-                CarPark latest = new CarParkFileOperationTest().createOfficeCarPark();
-
-                if (HomeActivity.this.carParkViewBuilder != null) {
-                    HomeActivity.this.carParkViewBuilder.build(latest);
-                }
-            }
         }
     }
 

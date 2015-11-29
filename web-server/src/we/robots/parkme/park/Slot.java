@@ -3,7 +3,6 @@ package we.robots.parkme.park;
 import java.util.HashMap;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
 import we.robots.parkme.user.User;
 
@@ -11,7 +10,6 @@ import we.robots.parkme.user.User;
 public class Slot {
 	//
 	@XStreamAlias("id")
-	@XStreamAsAttribute
 	private String id;
 
 	//

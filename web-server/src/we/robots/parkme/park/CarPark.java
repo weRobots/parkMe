@@ -3,7 +3,6 @@ package we.robots.parkme.park;
 import java.util.Set;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
 import we.robots.parkme.user.Admin;
 
@@ -14,9 +13,9 @@ import we.robots.parkme.user.Admin;
  */
 @XStreamAlias("carpark")
 public class CarPark {
+	
 	//
 	@XStreamAlias("id")
-	@XStreamAsAttribute
 	String id;
 
 	//
@@ -28,7 +27,7 @@ public class CarPark {
 	Admin admin;
 
 	//
-	@XStreamAlias("slotList")
+	@XStreamAlias("slots")
 	Set<Slot> slots;
 
 	public String getId() {

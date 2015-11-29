@@ -10,16 +10,16 @@ import android.widget.GridLayout;
 
 import com.robots.we.parkme.HomeActivity;
 import com.robots.we.parkme.R;
-
-import we.robots.parkme.park.CarPark;
+import com.robots.we.parkme.beans.CarPark;
 
 /**
  * Created by suppa on 27/11/2015.
  */
 public class UserOperationsPage extends Fragment implements HomeActivity.CarParkViewBuilder {
 
-    private CarPark carPark;
+
     private GridLayout slotView;
+    private CarPark carPark;
 
     public UserOperationsPage() {
     }

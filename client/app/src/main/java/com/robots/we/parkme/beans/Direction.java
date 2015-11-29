@@ -1,8 +1,5 @@
-package we.robots.parkme.park;
+package com.robots.we.parkme.beans;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-
-@XStreamAlias("direction")
 public enum Direction {
 	// front, but cover only the left
 	FRONT_LEFT,

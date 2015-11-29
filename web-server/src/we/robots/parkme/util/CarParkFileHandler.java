@@ -94,7 +94,7 @@ public final class CarParkFileHandler {
 	private static String toXML(CarPark carPark) {
 		XStream xstream = new XStream(new StaxDriver());
 		xstream.autodetectAnnotations(true);
-		return xstream.toXML(carPark);
+		return formatXml(xstream.toXML(carPark));
 	}
 
 	private static String formatXml(String xml) {

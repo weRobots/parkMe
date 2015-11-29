@@ -1,6 +1,4 @@
-package we.robots.parkme.park;
-
-import com.thoughtworks.xstream.annotations.XStreamAlias;
+package com.robots.we.parkme.beans;
 
 /**
  * Interface definition which described all the possible statuses for
@@ -8,7 +6,6 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
  * 
  * @author suppa
  */
-@XStreamAlias("status")
 public enum SlotStatus {
 
 	// slot is free
