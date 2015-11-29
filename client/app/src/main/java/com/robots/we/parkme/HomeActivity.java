@@ -16,12 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.robots.we.parkme.network.HttpRequestHandler;
+import com.robots.we.parkme.network.CarParkFileOperationTest;
 import com.robots.we.parkme.network.NetworkConnectivityReceiver;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
-
-import java.io.IOException;
 
 import we.robots.parkme.park.CarPark;
 
@@ -41,10 +37,16 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
      * Whether there is any internet connection.
      */
     private static boolean dataConnected = false;
+
     /**
      * The BroadcastReceiver that tracks network connectivity changes.
      */
     private NetworkConnectivityReceiver connectivityReceiver;
+
+    /**
+     * car park view handler
+     */
+    CarParkViewBuilder carParkViewBuilder;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -91,9 +93,6 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
 
         // update data connection availability on start up
         updateConnectedFlags();
-
-        // refresh user operation page
-        refreshUserOperationPage();
     }
 
     @Override
@@ -165,25 +164,49 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
         dataConnected = true;
     }
 
+    /**
+     * to register the  main car park view builder
+     *
+     * @param carParkViewBuilder
+     */
+    public void registerCarParkViewBuilder(CarParkViewBuilder carParkViewBuilder) {
+        this.carParkViewBuilder = carParkViewBuilder;
+    }
+
     // Implementation of AsyncTask used to download the latest car park XML and convert it.
     private class RefreshTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... urls) {
-            try {
+/*            try {
                 return HttpRequestHandler.refresh();
             } catch (IOException e) {
                 return null;
-            }
+            }*/
+
+            return "";
         }
 
         @Override
         protected void onPostExecute(String result) {
             // create car park view again for the latest server information
             if (result != null) {
-                XStream stream = new XStream(new StaxDriver());
-                CarPark latest = (CarPark) stream.fromXML(result);
+               /* XStream stream = new XStream(new StaxDriver());
+                CarPark latest = (CarPark) stream.fromXML(result);*/
+
+                CarPark latest = new CarParkFileOperationTest().createOfficeCarPark();
+
+                if (HomeActivity.this.carParkViewBuilder != null) {
+                    HomeActivity.this.carParkViewBuilder.build(latest);
+                }
             }
         }
+    }
+
+    /**
+     * builder definition for create the car park view.
+     */
+    public interface CarParkViewBuilder {
+        void build(CarPark carPark);
     }
 }

@@ -20,9 +20,7 @@ public class ConfigurationPage extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-        TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-        textView.setText("Configure car parks");
+        View rootView = inflater.inflate(R.layout.configuration_page, container, false);
         return rootView;
     }
 }

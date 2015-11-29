@@ -21,9 +21,7 @@ public class AdminPage extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-        TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-        textView.setText("Admin page");
+        View rootView = inflater.inflate(R.layout.admin_page, container, false);
         return rootView;
     }
 }
