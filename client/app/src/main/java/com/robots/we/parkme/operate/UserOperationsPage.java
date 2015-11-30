@@ -18,7 +18,7 @@ import com.robots.we.parkme.beans.CarPark;
 public class UserOperationsPage extends Fragment implements HomeActivity.CarParkViewBuilder {
 
 
-    private GridLayout slotView;
+    private GridLayout slotLayout;
     private CarPark carPark;
 
     public UserOperationsPage() {
@@ -28,7 +28,7 @@ public class UserOperationsPage extends Fragment implements HomeActivity.CarPark
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.user_operation_page, container, false);
-        slotView = (GridLayout) rootView.findViewById(R.id.slot_grid);
+        slotLayout = (GridLayout) rootView.findViewById(R.id.slot_grid);
         return rootView;
     }
 
@@ -40,7 +40,10 @@ public class UserOperationsPage extends Fragment implements HomeActivity.CarPark
 
     @Override
     public void build(CarPark carPark) {
-        // TODO build the hole view for the car park
+        // building full slot view again
+        slotLayout.removeAllViews();
         this.carPark = carPark;
+
+
     }
 }

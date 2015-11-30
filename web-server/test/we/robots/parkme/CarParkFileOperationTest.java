@@ -28,7 +28,7 @@ public class CarParkFileOperationTest {
 		for (int i = 1; i < 19; i++) {
 			final Slot slot = new Slot();
 			slot.setId(Integer.toString(i));
-			slot.setSlotType(SlotType.VERTICLE);
+			slot.setSlotType(SlotType.VERTICAL);
 			slot.setNavigationDetail(createNewNavigateDetail());
 			slots.add(slot);
 		}
