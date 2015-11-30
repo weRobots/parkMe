@@ -43,7 +43,6 @@ public class UserOperationsPage extends Fragment implements HomeActivity.CarPark
         // building full slot view again
         slotLayout.removeAllViews();
         this.carPark = carPark;
-
-
+        
     }
 }

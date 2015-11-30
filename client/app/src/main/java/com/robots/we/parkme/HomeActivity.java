@@ -109,7 +109,7 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
     private void refreshUserOperationPage() {
         if (dataConnected) {
             // AsyncTask subclass
-            new RefreshTask().execute("empty");
+            new RefreshTask().execute();
         } else {
             showErrorPage();
         }
@@ -177,28 +177,24 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
     }
 
     // Implementation of AsyncTask used to download the latest car park XML and convert it.
-    private class RefreshTask extends AsyncTask<String, Void, String> {
+    private class RefreshTask extends AsyncTask<Void, Void, CarPark> {
 
         @Override
-        protected String doInBackground(String... urls) {
+        protected CarPark doInBackground(Void... urls) {
             try {
                 // create car park view again for the latest server information
                 InputStream result = HttpRequestHandler.refresh();
-                if (result != null) {
-                    if (HomeActivity.this.carParkViewBuilder != null) {
-                        HomeActivity.this.carParkViewBuilder.build(CarParkXMLParser.parse(result));
-                    }
-                }
-
-                return null;
+                return CarParkXMLParser.parse(result);
             } catch (IOException e) {
                 return null;
             }
         }
 
         @Override
-        protected void onPostExecute(String result) {
-
+        protected void onPostExecute(CarPark carPark) {
+            if (HomeActivity.this.carParkViewBuilder != null) {
+                HomeActivity.this.carParkViewBuilder.build(carPark);
+            }
         }
     }
 

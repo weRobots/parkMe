@@ -168,7 +168,7 @@ public class CarParkXMLParser {
                     }
 
                     // value = slotID(string)
-                    if (nameInside.equals(Tags.DIRECTION)) {
+                    if (nameInside.equals(Tags.STRING)) {
                         slotId = readValue(parser, Tags.STRING);
                     }
                 }
@@ -201,9 +201,9 @@ public class CarParkXMLParser {
     // read string values.
     private static String readValue(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, ns, tag);
-        String summary = readText(parser);
+        String value = readText(parser);
         parser.require(XmlPullParser.END_TAG, ns, tag);
-        return summary;
+        return value;
     }
 
     // For the tags title and summary, extracts their text values.
