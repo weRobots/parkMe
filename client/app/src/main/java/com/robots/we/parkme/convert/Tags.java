@@ -20,6 +20,8 @@ public class Tags {
     // slot data
     public static final String SLOT = "slot";
     public static final String SLOT_LEVEL = "level";
+    public static final String COLUMN_INDEX = "columnIndex";
+    public static final String ROW_INDEX = "rawIndex";
     public static final String STATUS = "status";
     public static final String TYPE = "type";
     public static final String NAVIGATION = "navigation";

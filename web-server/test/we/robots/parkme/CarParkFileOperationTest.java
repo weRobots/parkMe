@@ -25,7 +25,7 @@ public class CarParkFileOperationTest {
 		office.setId("01");
 		final HashSet<Slot> slots = new HashSet<Slot>();
 
-		for (int i = 1; i < 19; i++) {
+		for (int i = 1; i < 21; i++) {
 			final Slot slot = new Slot();
 			slot.setId(Integer.toString(i));
 			slot.setSlotType(SlotType.VERTICAL);
@@ -148,16 +148,16 @@ public class CarParkFileOperationTest {
 		setNabours(slot_18, 5, null, null, "12", "12", "19", "19", "17", "17");
 		
 		// slot 18
-		final Slot slot_19 = slotAssistant.getSlot("18");
+		final Slot slot_19 = slotAssistant.getSlot("19");
 		slot_19.setColumnIndex(1);
 		slot_19.setRawIndex(8);
 		setNabours(slot_19, 6, null, null, "13", "13", "20", "20", "18", "18");
 		
 		// slot 18
-		final Slot slot_20 = slotAssistant.getSlot("18");
+		final Slot slot_20 = slotAssistant.getSlot("20");
 		slot_20.setColumnIndex(0);
 		slot_20.setRawIndex(8);
-		setNabours(slot_18, 6, null, null, "14", "14", null, null, "19", "19");
+		setNabours(slot_20, 6, null, null, "14", "14", null, null, "19", "19");
 
 		office.setSlots(slots);
 

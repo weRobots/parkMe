@@ -116,8 +116,20 @@ public class CarParkXMLParser {
             }
             // level
             else if (name.equals(Tags.SLOT_LEVEL)) {
-                slot.setId(readValue(parser, Tags.SLOT_LEVEL));
+                slot.setLevel(Integer.parseInt(readValue(parser, Tags.SLOT_LEVEL)));
             }
+
+            // column index
+            else if (name.equals(Tags.COLUMN_INDEX)) {
+                slot.setColumnIndex(Integer.parseInt(readValue(parser, Tags.COLUMN_INDEX)));
+            }
+
+            // row index
+            else if (name.equals(Tags.ROW_INDEX)) {
+                slot.setRawIndex(Integer.parseInt(readValue(parser, Tags.ROW_INDEX)));
+            }
+
+
             // type
             else if (name.equals(Tags.TYPE)) {
                 slot.setSlotType(readSlotType(parser));
@@ -139,7 +151,7 @@ public class CarParkXMLParser {
     }
 
     private static HashMap<Direction, String> readNavigation(XmlPullParser parser) throws IOException, XmlPullParserException {
-        HashMap<Direction, String> navigations = new HashMap<Direction, String>();
+        HashMap<Direction, String> navigation = new HashMap<Direction, String>();
 
         parser.require(XmlPullParser.START_TAG, ns, Tags.NAVIGATION);
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -173,14 +185,14 @@ public class CarParkXMLParser {
                     }
                 }
 
-                navigations.put(direction, slotId);
+                navigation.put(direction, slotId);
             }
             // others not concerned
             else {
                 skip(parser);
             }
         }
-        return navigations;
+        return navigation;
     }
 
     private static Direction readDirection(XmlPullParser parser) throws IOException, XmlPullParserException {
