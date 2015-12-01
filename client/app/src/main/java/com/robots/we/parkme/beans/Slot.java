@@ -4,47 +4,73 @@ import java.util.HashMap;
 
 public class Slot {
 
-	private String id;
+    private String id;
 
-	private int level;
+    private int level;
 
-	private SlotStatus status;
+    private int columnIndex;
 
-	private SlotType slotType;
+    private int rawIndex;
 
-	private HashMap<Direction, String> navigationDetail;
+    private SlotStatus status;
 
-	public String getId() {
-		return id;
-	}
+    private SlotType slotType;
 
-	public void setId(final String id) {
-		this.id = id;
-	}
+    private HashMap<Direction, String> navigationDetail;
 
-	public int getLevel() {
-		return level;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setLevel(final int level) {
-		this.level = level;
-	}
+    public void setId(final String id) {
+        this.id = id;
+    }
 
-	public SlotStatus getStatus() { return status; }
+    public int getLevel() {
+        return level;
+    }
 
-	public void setStatus(final SlotStatus status) { this.status = status; }
+    public void setLevel(final int level) {
+        this.level = level;
+    }
 
-	public HashMap<Direction, String> getNavigationDetail() {
-		return navigationDetail;
-	}
+    public SlotStatus getStatus() {
+        return status;
+    }
 
-	public void setNavigationDetail(final HashMap<Direction, String> navigationDetail) { this.navigationDetail = navigationDetail; }
+    public void setStatus(final SlotStatus status) {
+        this.status = status;
+    }
 
-	public SlotType getSlotType() {
-		return slotType;
-	}
+    public HashMap<Direction, String> getNavigationDetail() {
+        return navigationDetail;
+    }
 
-	public void setSlotType(SlotType slotType) {
-		this.slotType = slotType;
-	}
+    public void setNavigationDetail(final HashMap<Direction, String> navigationDetail) {
+        this.navigationDetail = navigationDetail;
+    }
+
+    public SlotType getSlotType() {
+        return slotType;
+    }
+
+    public void setSlotType(SlotType slotType) {
+        this.slotType = slotType;
+    }
+
+    public int getColumnIndex() {
+        return columnIndex;
+    }
+
+    public void setColumnIndex(int columnIndex) {
+        this.columnIndex = columnIndex;
+    }
+
+    public int getRawIndex() {
+        return rawIndex;
+    }
+
+    public void setRawIndex(int rawIndex) {
+        this.rawIndex = rawIndex;
+    }
 }

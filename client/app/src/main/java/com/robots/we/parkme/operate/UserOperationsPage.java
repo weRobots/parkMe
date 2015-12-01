@@ -1,12 +1,12 @@
 package com.robots.we.parkme.operate;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
 
 import com.robots.we.parkme.HomeActivity;
 import com.robots.we.parkme.R;
@@ -17,9 +17,7 @@ import com.robots.we.parkme.beans.CarPark;
  */
 public class UserOperationsPage extends Fragment implements HomeActivity.CarParkViewBuilder {
 
-
-    private GridLayout slotLayout;
-    private CarPark carPark;
+    private CarParkGridLayout slotLayout;
 
     public UserOperationsPage() {
     }
@@ -28,7 +26,8 @@ public class UserOperationsPage extends Fragment implements HomeActivity.CarPark
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.user_operation_page, container, false);
-        slotLayout = (GridLayout) rootView.findViewById(R.id.slot_grid);
+        rootView.setBackgroundColor(Color.LTGRAY);
+        slotLayout = (CarParkGridLayout) rootView.findViewById(R.id.slot_grid);
         return rootView;
     }
 
@@ -42,7 +41,10 @@ public class UserOperationsPage extends Fragment implements HomeActivity.CarPark
     public void build(CarPark carPark) {
         // building full slot view again
         slotLayout.removeAllViews();
-        this.carPark = carPark;
-        
+
+        if (carPark != null) {
+            slotLayout.initialize(carPark);
+            slotLayout.insert(carPark.getSlots());
+        }
     }
 }

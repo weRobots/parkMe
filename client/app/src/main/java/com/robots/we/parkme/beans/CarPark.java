@@ -9,27 +9,39 @@ import java.util.Set;
  */
 public class CarPark {
 
-	String id;
-	String centerLocation;
-	Set<Slot> slots;
+    String id;
+    String centerLocation;
+    Set<Slot> slots;
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setId(final String id) {
-		this.id = id;
-	}
+    public void setId(final String id) {
+        this.id = id;
+    }
 
-	public String getCenterLocation() {return centerLocation;}
+    public String getCenterLocation() {
+        return centerLocation;
+    }
 
-	public void setCenterLocation(final String centerLocation) { this.centerLocation = centerLocation; }
+    public void setCenterLocation(final String centerLocation) {
+        this.centerLocation = centerLocation;
+    }
 
-	public Set<Slot> getSlots() {
-		return slots;
-	}
+    public Set<Slot> getSlots() {
+        return slots;
+    }
 
-	public void setSlots(final Set<Slot> slots) {
-		this.slots = slots;
-	}
+    public void setSlots(final Set<Slot> slots) {
+        this.slots = slots;
+    }
+
+    public int getColumns() {
+        return 6;
+    }
+
+    public int getRaws() {
+        return 10;
+    }
 }

@@ -15,6 +15,14 @@ public class Slot {
 	//
 	@XStreamAlias("level")
 	private int level;
+	
+	//
+	@XStreamAlias("columnIndex")
+    private int columnIndex;
+
+	//
+	@XStreamAlias("rawIndex")
+    private int rawIndex;
 
 	//
 	@XStreamAlias("status")
@@ -79,4 +87,22 @@ public class Slot {
 	public void setSlotType(SlotType slotType) {
 		this.slotType = slotType;
 	}
+
+	public int getColumnIndex() {
+		return columnIndex;
+	}
+
+	public void setColumnIndex(int columnIndex) {
+		this.columnIndex = columnIndex;
+	}
+
+	public int getRawIndex() {
+		return rawIndex;
+	}
+
+	public void setRawIndex(int rawIndex) {
+		this.rawIndex = rawIndex;
+	}
+	
+	
 }
