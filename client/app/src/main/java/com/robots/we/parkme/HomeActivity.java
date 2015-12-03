@@ -6,18 +6,17 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.robots.we.parkme.beans.CarPark;
 import com.robots.we.parkme.convert.CarParkXMLParser;
+import com.robots.we.parkme.gps.GPSTracker;
 import com.robots.we.parkme.network.HttpRequestHandler;
 import com.robots.we.parkme.network.NetworkConnectivityReceiver;
 
@@ -35,6 +34,11 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
+
+    /**
+     * Client to connect to google play services
+     */
+    private GPSTracker gpsTracker;
 
     /**
      * Whether there is any internet connection.
@@ -72,21 +76,35 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-
-        // adding refresh button
-        FloatingActionButton refresh = (FloatingActionButton) findViewById(R.id.refresh);
-        refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                refreshUserOperationPage();
-            }
-        });
+        // set up tool bar actions
+        setUpToolActions(toolbar);
 
         // Register BroadcastReceiver to track connection changes.
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         connectivityReceiver = new NetworkConnectivityReceiver();
         connectivityReceiver.registerConnectivityStatusChangedListener(this);
         this.registerReceiver(connectivityReceiver, filter);
+
+        // build a Google API client to connect to google play service
+        buildGPSTracker();
+    }
+
+    private void buildGPSTracker() {
+        gpsTracker = new GPSTracker(this);
+    }
+
+    private void setUpToolActions(Toolbar toolbar) {
+        toolbar.setOnMenuItemClickListener(
+                new Toolbar.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        // Handle refresh click
+                        if (item.getItemId() == R.id.action_refresh) {
+                            refreshUserOperationPage();
+                        }
+                        return true;
+                    }
+                });
     }
 
     // Refreshes the user operation display if the network connection is available.
@@ -189,6 +207,12 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
                 HomeActivity.this.carParkViewBuilder.build(carPark);
             }
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        gpsTracker.stopUsingGPS();
     }
 
     /**
