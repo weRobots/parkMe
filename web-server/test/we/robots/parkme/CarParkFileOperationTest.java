@@ -76,14 +76,14 @@ public class CarParkFileOperationTest {
 		final Slot slot_7 = slotAssistant.getSlot("7");
 		slot_7.setSlotType(SlotType.HORIZONTAL);
 		slot_7.setColumnIndex(2);
-		slot_7.setRawIndex(6);
+		slot_7.setRawIndex(5);
 		setNabours(slot_7, 3, "8", "8", "6", "6", null, null, "11", "12");
 
 		// slot 08
 		final Slot slot_8 = slotAssistant.getSlot("8");
 		slot_8.setSlotType(SlotType.HORIZONTAL);
 		slot_8.setColumnIndex(0);
-		slot_8.setRawIndex(6);
+		slot_8.setRawIndex(5);
 		setNabours(slot_8, 4, null, null, "7", "7", null, null, "12", "13");
 
 		// slot 09

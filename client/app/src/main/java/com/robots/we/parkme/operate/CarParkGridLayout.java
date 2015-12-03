@@ -1,9 +1,8 @@
 package com.robots.we.parkme.operate;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.util.AttributeSet;
-import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 
 import com.robots.we.parkme.beans.CarPark;
@@ -43,14 +42,16 @@ public class CarParkGridLayout extends GridLayout {
         if (carPark != null) {
             setColumnCount(carPark.getColumns());
             setRowCount(carPark.getRaws());
+            setUseDefaultMargins(true);
 
             // set grid scales
-            Point size = new Point();
-            WindowManager windowManager = (WindowManager) context
-                    .getSystemService(Context.WINDOW_SERVICE);
-            windowManager.getDefaultDisplay().getSize(size);
-            int columnWidth = size.x / carPark.getColumns();
-            int rowHeight = size.y / carPark.getRaws();
+            FrameLayout parentView = (FrameLayout) getParent();
+            int width = parentView.getWidth();
+            int height = parentView.getHeight() - 300;
+
+            int columnWidth = width / carPark.getColumns();
+            int rowHeight = height / carPark.getRaws();
+
             gridScale = (columnWidth < rowHeight) ? columnWidth : rowHeight;
         }
     }
@@ -74,6 +75,8 @@ public class CarParkGridLayout extends GridLayout {
      * @param slot
      */
     public void insert(final Slot slot) {
-        addView(new SlotView(this.context, slot , gridScale));
+        addView(new SlotView(this.context, slot, gridScale));
     }
+
+
 }

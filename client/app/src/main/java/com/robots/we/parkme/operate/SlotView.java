@@ -3,17 +3,15 @@ package com.robots.we.parkme.operate;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.view.Gravity;
-import android.widget.Button;
 import android.widget.GridLayout;
-import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.robots.we.parkme.beans.Slot;
 
 /**
  * Created by supun.hettigoda on 11/30/2015.
  */
-public class SlotView extends Button {
+public class SlotView extends TextView {
     private final Slot slot;
     private final int gridScale;
 
@@ -41,23 +39,21 @@ public class SlotView extends Button {
 
     private void setBounds() {
         GridLayout.LayoutParams param = new GridLayout.LayoutParams();
-        //param.rightMargin = 5;
-        //param.topMargin = 5;
-        param.setGravity(Gravity.FILL);
-        param.setMargins(5, 5, 5, 5);
 
         switch (this.slot.getSlotType()) {
             case HORIZONTAL:
                 param.columnSpec = GridLayout.spec(getSlot().getColumnIndex(), 2);
                 param.rowSpec = GridLayout.spec(getSlot().getRawIndex());
-                setWidth(gridScale * 2);
-                setHeight(gridScale);
+                param.width = this.gridScale * 2;
+                param.height = this.gridScale;
+                param.setMargins(5, 5, 5, 0);
                 break;
             case VERTICAL:
                 param.columnSpec = GridLayout.spec(getSlot().getColumnIndex());
                 param.rowSpec = GridLayout.spec(getSlot().getRawIndex(), 2);
-                setWidth(gridScale);
-                setHeight(gridScale * 2);
+                param.width = this.gridScale;
+                param.height = this.gridScale * 2;
+                param.setMargins(5, 5, 5, 5);
                 break;
         }
 
