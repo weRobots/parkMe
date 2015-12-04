@@ -9,6 +9,7 @@ import we.robots.parkme.manage.SlotAssistant;
 import we.robots.parkme.park.CarPark;
 import we.robots.parkme.park.Direction;
 import we.robots.parkme.park.Slot;
+import we.robots.parkme.park.SlotStatus;
 import we.robots.parkme.park.SlotType;
 import we.robots.parkme.util.CarParkFileHandler;
 import we.robots.parkme.util.CommonUtil;
@@ -30,6 +31,7 @@ public class CarParkFileOperationTest {
 			slot.setId(Integer.toString(i));
 			slot.setSlotType(SlotType.VERTICAL);
 			slot.setNavigationDetail(createNewNavigateDetail());
+			slot.setStatus(SlotStatus.AVAILABLE);
 			slots.add(slot);
 		}
 
@@ -120,8 +122,7 @@ public class CarParkFileOperationTest {
 		final Slot slot_14 = slotAssistant.getSlot("14");
 		slot_14.setColumnIndex(0);
 		slot_14.setRawIndex(6);
-		setNabours(slot_14, 5,  "20", "20", "8", "8", null, null, "13", "13");
-
+		setNabours(slot_14, 5, "20", "20", "8", "8", null, null, "13", "13");
 
 		// slot 15
 		final Slot slot_15 = slotAssistant.getSlot("15");
@@ -146,13 +147,13 @@ public class CarParkFileOperationTest {
 		slot_18.setColumnIndex(2);
 		slot_18.setRawIndex(8);
 		setNabours(slot_18, 5, null, null, "12", "12", "19", "19", "17", "17");
-		
+
 		// slot 18
 		final Slot slot_19 = slotAssistant.getSlot("19");
 		slot_19.setColumnIndex(1);
 		slot_19.setRawIndex(8);
 		setNabours(slot_19, 6, null, null, "13", "13", "20", "20", "18", "18");
-		
+
 		// slot 18
 		final Slot slot_20 = slotAssistant.getSlot("20");
 		slot_20.setColumnIndex(0);

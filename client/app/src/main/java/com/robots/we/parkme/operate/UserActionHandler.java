@@ -8,6 +8,7 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -33,11 +34,36 @@ public class UserActionHandler {
         this.context = context;
     }
 
+    /**
+     * show action set that can be performed upon the selected slot
+     *
+     * @param v
+     */
     public void defineActions(SlotView v) {
-        buildActionViews(v.getSlot());
-        createPopUP();
+        final List<ActionPanel> actionList = buildActionViews(v.getSlot());
+        final View actionContainer = buildActionContainer(actionList);
+        final PopupWindow popup = createPopupWindow();
 
-        showPopup();
+        //
+        popup.setContentView(actionContainer);
+
+        // Displaying the popup at the bottom screen
+        popup.showAtLocation(actionContainer, Gravity.BOTTOM, 0, 0);
+    }
+
+    private PopupWindow createPopupWindow() {
+        // Creating the PopupWindow
+        final PopupWindow popup = new PopupWindow(context);
+        Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        popup.setWidth(display.getWidth());
+        popup.setHeight(200);
+        popup.setFocusable(true);
+        popup.setAnimationStyle(R.style.PopupWindowAnimation);
+
+        // Clear the default translucent background
+        popup.setBackgroundDrawable(new BitmapDrawable());
+
+        return popup;
     }
 
     // The method that displays the popup.
@@ -82,11 +108,29 @@ public class UserActionHandler {
         switch (v.getStatus()) {
             case ALLOCATED:
             case AVAILABLE:
-                actions.add(new ActionPanel(context, R.mipmap.notify, "notify blockers", ActionPanel.ActionType.SEND_NOTIFICATION));
+                actions.add(new ActionPanel(context, R.mipmap.notify, "send notifications", ActionPanel.ActionType.SEND_NOTIFICATION));
                 break;
             case BLOCKED:
         }
 
         return actions;
+    }
+
+    private View buildActionContainer(List<ActionPanel> actionList) {
+        // Inflate the popup_layout.xml
+        LinearLayout viewGroup = (LinearLayout) context
+                .findViewById(R.id.popupLinearLayout);
+        LayoutInflater layoutInflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LinearLayout layout = (LinearLayout) layoutInflater.inflate(R.layout.popup_layout, viewGroup);
+
+        // action param
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        for (ActionPanel action :
+                actionList) {
+            layout.addView(action, param);
+        }
+
+        return layout;
     }
 }
