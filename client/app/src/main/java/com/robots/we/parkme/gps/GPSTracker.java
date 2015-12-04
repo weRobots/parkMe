@@ -7,7 +7,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -44,7 +43,6 @@ public final class GPSTracker implements ConnectionCallbacks, OnConnectionFailed
 
     public GPSTracker(AppCompatActivity context) {
         this.mContext = context;
-        this.indicator = ((Toolbar) this.mContext.findViewById(R.id.tool_bar)).getMenu().getItem(R.id.action_location);
         buildGPSClient();
         getLocation();
     }
@@ -57,19 +55,22 @@ public final class GPSTracker implements ConnectionCallbacks, OnConnectionFailed
      * Stop using GPS listener
      * Calling this function will stop using GPS in your app
      */
-    public void stopUsingGPS() {
-        if (mGPSClient != null) {
+    public void stop() {
+        if (mGPSClient != null)
             mGPSClient.disconnect();
-        }
+    }
+
+    public void start() {
+        if (mGPSClient != null)
+            mGPSClient.connect();
     }
 
     /**
      * Function to get latitude
      */
     public double getLatitude() {
-        if (location != null) {
+        if (location != null)
             latitude = location.getLatitude();
-        }
 
         // return latitude
         return latitude;
@@ -79,9 +80,8 @@ public final class GPSTracker implements ConnectionCallbacks, OnConnectionFailed
      * Function to get longitude
      */
     public double getLongitude() {
-        if (location != null) {
+        if (location != null)
             longitude = location.getLongitude();
-        }
 
         // return longitude
         return longitude;
@@ -130,17 +130,20 @@ public final class GPSTracker implements ConnectionCallbacks, OnConnectionFailed
 
     @Override
     public void onConnected(Bundle bundle) {
-        indicator.setIcon(R.mipmap.location_active);
+        if (indicator != null)
+            indicator.setIcon(R.mipmap.location_active);
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        indicator.setIcon(R.mipmap.location_inactive);
+        if (indicator != null)
+            indicator.setIcon(R.mipmap.location_inactive);
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        indicator.setIcon(R.mipmap.location_inactive);
+        if (indicator != null)
+            indicator.setIcon(R.mipmap.location_inactive);
     }
 
     protected synchronized void buildGPSClient() {
@@ -149,5 +152,19 @@ public final class GPSTracker implements ConnectionCallbacks, OnConnectionFailed
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+    }
+
+    /**
+     * register menu indicator
+     *
+     * @param indicator
+     */
+    public void registerIndicator(MenuItem indicator) {
+        this.indicator = indicator;
+        if (indicator != null)
+            if (isConnected())
+                indicator.setIcon(R.mipmap.location_active);
+            else
+                indicator.setIcon(R.mipmap.location_inactive);
     }
 }

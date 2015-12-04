@@ -19,11 +19,14 @@ import com.robots.we.parkme.convert.CarParkXMLParser;
 import com.robots.we.parkme.gps.GPSTracker;
 import com.robots.we.parkme.network.HttpRequestHandler;
 import com.robots.we.parkme.network.NetworkConnectivityReceiver;
+import com.robots.we.parkme.operate.CarParkGridLayout;
+import com.robots.we.parkme.operate.SlotView;
+import com.robots.we.parkme.operate.UserActionHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-public class HomeActivity extends AppCompatActivity implements NetworkConnectivityReceiver.ConnectivityStatusChangedListener {
+public class HomeActivity extends AppCompatActivity implements NetworkConnectivityReceiver.ConnectivityStatusChangedListener, CarParkGridLayout.SlotClickListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -39,6 +42,11 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
      * Client to connect to google play services
      */
     private GPSTracker gpsTracker;
+
+    /**
+     * action handler
+     */
+    private UserActionHandler userActionHandler;
 
     /**
      * Whether there is any internet connection.
@@ -87,10 +95,17 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
 
         // build a Google API client to connect to google play service
         buildGPSTracker();
+
+        // build the action handler
+        buildUserActionHandler();
     }
 
     private void buildGPSTracker() {
         gpsTracker = new GPSTracker(this);
+    }
+
+    private void buildUserActionHandler() {
+        userActionHandler = new UserActionHandler(this);
     }
 
     private void setUpToolActions(Toolbar toolbar) {
@@ -111,6 +126,9 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
     @Override
     public void onStart() {
         super.onStart();
+
+        // start gps tracking
+        gpsTracker.start();
 
         // update data connection availability on start up
         updateConnectedFlags();
@@ -143,7 +161,8 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_home, menu);
-        return true;
+        gpsTracker.registerIndicator(menu.findItem(R.id.action_location));
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -187,6 +206,16 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
         this.carParkViewBuilder = carParkViewBuilder;
     }
 
+    @Override
+    public void onClick(SlotView v) {
+        userActionHandler.defineActions(v);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+    }
+
     // Implementation of AsyncTask used to download the latest car park XML and convert it.
     private class RefreshTask extends AsyncTask<Void, Void, CarPark> {
 
@@ -212,7 +241,7 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
     @Override
     protected void onStop() {
         super.onStop();
-        gpsTracker.stopUsingGPS();
+        gpsTracker.stop();
     }
 
     /**

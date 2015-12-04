@@ -28,6 +28,7 @@ public class UserOperationsPage extends Fragment implements HomeActivity.CarPark
         View rootView = inflater.inflate(R.layout.user_operation_page, container, false);
         rootView.setBackgroundColor(Color.LTGRAY);
         slotLayout = (CarParkGridLayout) rootView.findViewById(R.id.slot_grid);
+        slotLayout.registerSlotClickListener((HomeActivity) getActivity());
         return rootView;
     }
 

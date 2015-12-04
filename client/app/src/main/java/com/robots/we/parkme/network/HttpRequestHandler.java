@@ -13,6 +13,12 @@ import java.net.URL;
  */
 public class HttpRequestHandler {
 
+    /**
+     * load the car park stream
+     *
+     * @return
+     * @throws IOException
+     */
     public static InputStream refresh() throws IOException {
         return downloadUrl(NetworkConfigurations.URL_REFRESH);
     }
