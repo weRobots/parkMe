@@ -22,6 +22,24 @@ public class User implements ParkMeSaveData
   @XStreamAlias("name")
   private String name;
 
+  @XStreamAlias("name")
+  private String role;
+
+  public User()
+  {
+    this.role = UserRole.DEFAULT.toString();
+  }
+
+  public String getRole()
+  {
+    return role;
+  }
+
+  public void setRole(String role)
+  {
+    this.role = role;
+  }
+
   public String getName()
   {
     return name;

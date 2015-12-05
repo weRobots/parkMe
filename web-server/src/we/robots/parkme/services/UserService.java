@@ -7,6 +7,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import we.robots.parkme.user.User;
+import we.robots.parkme.user.UserRole;
 import we.robots.parkme.util.UserHandler;
 
 @Path("/userService")
@@ -37,5 +38,23 @@ public class UserService
   String userId)
   {
     return UserHandler.getInstance().readUserDetailsAsXML(userId);
+  }
+
+  @GET
+  @Path("/createAdminUser")
+  @Produces(MediaType.APPLICATION_XML)
+  public String createAdminUser(@QueryParam("registrationToken")
+  String registrationToken, @QueryParam("vehichleNumber")
+  String vehichleNumber, @QueryParam("mobileNumber")
+  String mobileNumber, @QueryParam("name")
+  String name)
+  {
+    User user = new User();
+    user.setMobileNumber(mobileNumber);
+    user.setName(name);
+    user.setRegistrationToken(registrationToken);
+    user.setVehichleNumber(vehichleNumber);
+    user.setRole(UserRole.ADMIN.toString());
+    return UserHandler.getInstance().saveUserDetails(user);
   }
 }
