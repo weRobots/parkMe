@@ -74,7 +74,7 @@ public final class CarParkFileHandler {
 
 		try {
 			out = new BufferedWriter(new FileWriter(file_path));
-			out.write(toXML(carPark));
+			out.write(CommonUtil.toXML(carPark));
 
 		} catch (IOException e1) {
 
@@ -91,29 +91,4 @@ public final class CarParkFileHandler {
 		return false;
 	}
 
-	private static String toXML(CarPark carPark) {
-		XStream xstream = new XStream(new StaxDriver());
-		xstream.autodetectAnnotations(true);
-		return formatXml(xstream.toXML(carPark));
-	}
-
-	private static String formatXml(String xml) {
-
-		try {
-			Transformer serializer = SAXTransformerFactory.newInstance().newTransformer();
-
-			serializer.setOutputProperty(OutputKeys.INDENT, "yes");
-			serializer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-
-			Source xmlSource = new SAXSource(new InputSource(new ByteArrayInputStream(xml.getBytes())));
-			StreamResult res = new StreamResult(new ByteArrayOutputStream());
-
-			serializer.transform(xmlSource, res);
-
-			return new String(((ByteArrayOutputStream) res.getOutputStream()).toByteArray());
-
-		} catch (Exception e) {
-			return xml;
-		}
-	}
 }
