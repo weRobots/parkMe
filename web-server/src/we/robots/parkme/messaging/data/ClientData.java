@@ -1,19 +1,14 @@
 package we.robots.parkme.messaging.data;
 
-public class ClientData
-{
+public class ClientData {
 
-  private String userId;
+	private String userId;
 
-  public String getUserId()
-  {
-    return userId;
-  }
+	public String getUserId() {
+		return userId;
+	}
 
-  public void setUserId(String userId)
-  {
-    this.userId = userId;
-  }
-  
-  
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 }
