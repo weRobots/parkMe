@@ -18,7 +18,7 @@ public class DistanceCalculator {
 	 * @param unit
 	 * @return
 	 */
-	public static double distance(double p1_lat, double p1_lon, double p2_lat, double p2_lon, String unit) {
+	public static double distance(double p1_lat, double p1_lon, double p2_lat, double p2_lon) {
 		double theta = p1_lon - p2_lon;
 		double dist = Math.sin(deg2rad(p1_lat)) * Math.sin(deg2rad(p2_lat))
 				+ Math.cos(deg2rad(p1_lat)) * Math.cos(deg2rad(p2_lat)) * Math.cos(deg2rad(theta));

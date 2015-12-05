@@ -12,53 +12,90 @@ import we.robots.parkme.user.Admin;
  * @author suppa
  */
 @XStreamAlias("carpark")
-public class CarPark {
-	
-	//
-	@XStreamAlias("id")
-	String id;
+public class CarPark
+{
 
-	//
-	@XStreamAlias("center")
-	String centerLocation;
+  //
+  @XStreamAlias("id")
+  String id;
 
-	//
-	@XStreamAlias("admin")
-	Admin admin;
+  //
+  @XStreamAlias("center_lat")
+  String centerLocationLat;
 
-	//
-	@XStreamAlias("slots")
-	Set<Slot> slots;
+  @XStreamAlias("center_log")
+  String centerLocationLog;
 
-	public String getId() {
-		return id;
-	}
+  //
+  @XStreamAlias("admin")
+  Admin admin;
 
-	public void setId(final String id) {
-		this.id = id;
-	}
+  //
+  @XStreamAlias("slots")
+  Set<Slot> slots;
+  
+  @XStreamAlias("operationStatus")
+  OperationStatus operationStatus;
+    
 
-	public String getCenterLocation() {
-		return centerLocation;
-	}
+  public OperationStatus getOperationStatus()
+  {
+    return operationStatus;
+  }
 
-	public void setCenterLocation(final String centerLocation) {
-		this.centerLocation = centerLocation;
-	}
+  public void setOperationStatus(OperationStatus operationStatus)
+  {
+    this.operationStatus = operationStatus;
+  }
 
-	public Admin getAdmin() {
-		return admin;
-	}
+  public String getId()
+  {
+    return id;
+  }
 
-	public void setAdmin(final Admin admin) {
-		this.admin = admin;
-	}
+  public void setId(final String id)
+  {
+    this.id = id;
+  }
+ 
 
-	public Set<Slot> getSlots() {
-		return slots;
-	}
+  public String getCenterLocationLat()
+  {
+    return centerLocationLat;
+  }
 
-	public void setSlots(final Set<Slot> slots) {
-		this.slots = slots;
-	}
+  public void setCenterLocationLat(String centerLocationLat)
+  {
+    this.centerLocationLat = centerLocationLat;
+  }
+
+  public String getCenterLocationLog()
+  {
+    return centerLocationLog;
+  }
+
+  public void setCenterLocationLog(String centerLocationLog)
+  {
+    this.centerLocationLog = centerLocationLog;
+  }
+
+  public Admin getAdmin()
+  {
+    return admin;
+  }
+
+  public void setAdmin(final Admin admin)
+  {
+    this.admin = admin;
+  }
+
+  public Set<Slot> getSlots()
+  {
+    return slots;
+  }
+
+  public void setSlots(final Set<Slot> slots)
+  {
+    this.slots = slots;
+  }
 }
