@@ -74,8 +74,7 @@ public class CarParkService
     Slot parkedSlot = CarParkManager.getInstance().identifyParkedSlot(carPark, userId);
     Set<Slot> slotsToMove = CarParkManager.getInstance().identifySlotsToMoveTheCar(carPark, parkedSlot.getId());
 
-    User user = UserHandler.getInstance().readUserDetailsAsObj(userId);
-    OPERATION_STATUS status = CloudMessageSender.getInstance().sendGCM(user, "Please remove your car", slotsToMove);
+    OPERATION_STATUS status = CloudMessageSender.getInstance().sendGCM("Please remove your car", slotsToMove);
 
     CarPark savedParkData = CarParkManager.getInstance().releaseCar(carPark, userId);
     savedParkData.setOperationStatus(new OperationStatus(status, "Removed user from parked slot"));

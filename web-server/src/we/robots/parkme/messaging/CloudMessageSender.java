@@ -23,7 +23,7 @@ public class CloudMessageSender
 {
   private Gson gson;
 
-  private static CloudMessageSender instance;
+  private static CloudMessageSender instance = new CloudMessageSender();
 
   public static CloudMessageSender getInstance()
   {
@@ -35,13 +35,13 @@ public class CloudMessageSender
     gson = new GsonBuilder().create();
   }
 
-  public OPERATION_STATUS sendGCM(User user, String notification, Set<Slot> slotSet)
+  public OPERATION_STATUS sendGCM(String notification, Set<Slot> slotSet)
   {
     for (Slot slot : slotSet)
     {
       try
       {
-        sendGCM(user, notification, slot);
+        sendGCM(slot.getUser(), notification);
       }
       catch (Exception e)
       {
@@ -54,7 +54,7 @@ public class CloudMessageSender
 
   }
 
-  private void sendGCM(User user, String notification, Slot slot) throws IOException
+  private void sendGCM(User user, String notification) throws IOException
   {
     GSMData gsmData = new GSMData();
     gsmData.setTo(user.getRegistrationToken());
