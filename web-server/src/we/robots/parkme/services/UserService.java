@@ -57,4 +57,16 @@ public class UserService
     user.setRole(UserRole.ADMIN.toString());
     return UserHandler.getInstance().saveUserDetails(user);
   }
+
+  @GET
+  @Path("/updateToken")
+  @Produces(MediaType.APPLICATION_XML)
+  public String updateToken(@QueryParam("registrationToken")
+  String registrationToken, @QueryParam("userId")
+  String userId)
+  {
+    User user = UserHandler.getInstance().readUserDetailsAsObj(userId);
+    user.setRegistrationToken(registrationToken);
+    return UserHandler.getInstance().saveUserDetails(user);
+  }
 }

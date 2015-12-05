@@ -1,10 +1,13 @@
 package we.robots.parkme.manage;
 
+import java.util.Set;
+
 import we.robots.parkme.park.CarPark;
 import we.robots.parkme.park.Slot;
 import we.robots.parkme.park.SlotStatus;
 import we.robots.parkme.user.User;
 import we.robots.parkme.util.CarParkFileHandler;
+import we.robots.parkme.util.CommonUtil;
 import we.robots.parkme.util.DistanceCalculator;
 import we.robots.parkme.util.UserHandler;
 
@@ -40,7 +43,7 @@ public class CarParkManager
     return carPark;
   }
 
-  public CarPark releaseCar(CarPark carPark,String userId)
+  public CarPark releaseCar(CarPark carPark, String userId)
   {
     for (Slot slot : carPark.getSlots())
     {
@@ -59,6 +62,23 @@ public class CarParkManager
     CarParkFileHandler.save(carPark, carPark.getId());
     return carPark;
   }
+  
+  public Slot identifyParkedSlot(CarPark carPark, String userId)
+  {
+    for (Slot slot : carPark.getSlots())
+    {
+      User userInSlot = slot.getUser();
+      if (userInSlot == null)
+      {
+        continue;
+      }
+      if (userInSlot.getUserId().equals(userId))
+      {
+        return slot;
+      }
+    }
+    return null;
+  }
 
   public boolean isParkableCarPark(CarPark carPark, String lat, String longi)
   {
@@ -69,5 +89,14 @@ public class CarParkManager
       return true;
     }
     return false;
+  }
+
+  public Set<Slot> identifySlotsToMoveTheCar(CarPark carPark, String slotId)
+  {
+
+    SlotAssistant slotAssistant = new SlotAssistant(CommonUtil.convert(carPark.getSlots()));
+    Set<Slot> slotSet = slotAssistant.identifyBlockingSlots(slotId);
+
+    return slotSet;
   }
 }
