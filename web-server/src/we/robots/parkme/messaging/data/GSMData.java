@@ -8,6 +8,20 @@ public class GSMData
   private String to;
 
   private ClientNotification notification;
+  
+  private String topic;
+  
+  
+
+  public String getTopic()
+  {
+    return topic;
+  }
+
+  public void setTopic(String topic)
+  {
+    this.topic = topic;
+  }
 
   public ClientNotification getNotification()
   {

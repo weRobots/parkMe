@@ -3,11 +3,21 @@ package we.robots.parkme.messaging;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Set;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+import sun.misc.IOUtils;
 
 import we.robots.parkme.messaging.data.ClientData;
 import we.robots.parkme.messaging.data.ClientNotification;
@@ -54,7 +64,7 @@ public class CloudMessageSender
 
   }
 
-  private void sendGCM(User user, String notification) throws IOException
+  private void sendGCM(User user, String notification) throws IOException, JSONException
   {
     GSMData gsmData = new GSMData();
     gsmData.setTo(user.getRegistrationToken());
@@ -71,44 +81,36 @@ public class CloudMessageSender
 
   }
 
-  private void sendPost(GSMData gsmData) throws IOException
+  private void sendPost(GSMData gsmData) throws IOException, JSONException
   {
+    String urlStr = "https://gcm-http.googleapis.com/gcm/send";
+    //    String urlStr = "https://android.googleapis.com/gcm/send";
+//    JSONObject jGcmData = new JSONObject();
+//    JSONObject jData = new JSONObject();
+//    jData.put("message", "seses3");
+////        jGcmData.put("to", "");
+//
+//    // What to send in GCM message.
+////    jGcmData.put("to", gsmData.getTo());
+//    jGcmData.put("data", jData);
+    //    jGcmData.put(key, value)
+    // Create connection to send GCM Message request.
+    URL url = new URL(urlStr);
+    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+    conn.setRequestProperty("Authorization", "key=" + "AIzaSyB-tUxv9kfbxNU3sNJCo6gqIBl35RYxXHQ");
+    conn.setRequestProperty("Content-Type", "application/json");
+    conn.setRequestMethod("POST");
+    conn.setDoOutput(true);
 
-    String url = "https://gcm-http.googleapis.com/gcm/send";
-    URL obj = new URL(url);
-    HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+    // Send GCM message content.
+    OutputStream outputStream = conn.getOutputStream();
+    outputStream.write(gson.toJson(gsmData).getBytes());
 
-    //add reuqest header
-    con.setRequestMethod("POST");
-    con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-    con.setRequestProperty("Content-Type", "Content-Type:application/json");
-
-    String urlParameters = gson.toJson(gsmData);
-
-    // Send post request
-    con.setDoOutput(true);
-    DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-    wr.writeBytes(urlParameters);
-    wr.flush();
-    wr.close();
-
-    int responseCode = con.getResponseCode();
-    System.out.println("\nSending 'POST' request to URL : " + url);
-    System.out.println("Post parameters : " + urlParameters);
-    System.out.println("Response Code : " + responseCode);
-
-    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-    String inputLine;
-    StringBuffer response = new StringBuffer();
-
-    while ((inputLine = in.readLine()) != null)
-    {
-      response.append(inputLine);
-    }
-    in.close();
-
-    //print result
-    System.out.println(response.toString());
-
+    // Read GCM response.
+//    InputStream inputStream = conn.getInputStream();
+//        String resp = IOUtils.readFully(inputStream);
+//        System.out.println(resp);
+    System.out.println("Check your device/emulator for notification or logcat for "
+        + "confirmation of the receipt of the GCM message.");
   }
 }
