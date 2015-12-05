@@ -75,7 +75,10 @@ public class CloudMessageSender
     clientNotification.setTitle("ParkMe: Notification");
 
     gsmData.setNotification(clientNotification);
-    gsmData.setClientData(new ClientData());
+    ClientData clientData = new ClientData();
+    clientData.setUserId(user.getUserId());
+
+    gsmData.setData(clientData);
 
     sendPost(gsmData);
 
@@ -83,34 +86,47 @@ public class CloudMessageSender
 
   private void sendPost(GSMData gsmData) throws IOException, JSONException
   {
-    String urlStr = "https://gcm-http.googleapis.com/gcm/send";
-    //    String urlStr = "https://android.googleapis.com/gcm/send";
-//    JSONObject jGcmData = new JSONObject();
-//    JSONObject jData = new JSONObject();
-//    jData.put("message", "seses3");
-////        jGcmData.put("to", "");
-//
-//    // What to send in GCM message.
-////    jGcmData.put("to", gsmData.getTo());
-//    jGcmData.put("data", jData);
-    //    jGcmData.put(key, value)
-    // Create connection to send GCM Message request.
-    URL url = new URL(urlStr);
-    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-    conn.setRequestProperty("Authorization", "key=" + "AIzaSyB-tUxv9kfbxNU3sNJCo6gqIBl35RYxXHQ");
-    conn.setRequestProperty("Content-Type", "application/json");
-    conn.setRequestMethod("POST");
-    conn.setDoOutput(true);
+    try
+    {
 
-    // Send GCM message content.
-    OutputStream outputStream = conn.getOutputStream();
-    outputStream.write(gson.toJson(gsmData).getBytes());
+      // Prepare JSON containing the GCM message content. What to send and where to send.
+      JSONObject jGcmData = new JSONObject();
+      JSONObject jData = new JSONObject();
+      jData.put("message", gsmData.getNotification().getBody());
+      // Where to send GCM message.
 
-    // Read GCM response.
-//    InputStream inputStream = conn.getInputStream();
-//        String resp = IOUtils.readFully(inputStream);
-//        System.out.println(resp);
-    System.out.println("Check your device/emulator for notification or logcat for "
-        + "confirmation of the receipt of the GCM message.");
+      jGcmData.put("to", gsmData.getTo());
+
+      // What to send in GCM message.
+      jGcmData.put("data", jData);
+
+      // Create connection to send GCM Message request.
+      URL url = new URL("https://gcm-http.googleapis.com/gcm/send");
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      conn.setRequestProperty("Authorization", "key=" + "AIzaSyB-tUxv9kfbxNU3sNJCo6gqIBl35RYxXHQ");
+      conn.setRequestProperty("Content-Type", "application/json");
+      conn.setRequestMethod("POST");
+      conn.setDoOutput(true);
+
+      // Send GCM message content.
+      OutputStream outputStream = conn.getOutputStream();
+      outputStream.write(jGcmData.toString().getBytes());
+
+      // Read GCM response.
+      InputStream inputStream = conn.getInputStream();
+      //    String resp = IOUtils.toString(inputStream);
+      //    System.out.println(resp);
+      System.out.println("Check your device/emulator for notification or logcat for "
+          + "confirmation of the receipt of the GCM message.");
+    }
+    catch (IOException e)
+    {
+      System.out.println("Unable to send GCM message.");
+      System.out.println("Please ensure that API_KEY has been replaced by the server "
+          + "API key, and that the device's registration token is correct (if specified).");
+      e.printStackTrace();
+    }
+
   }
+
 }

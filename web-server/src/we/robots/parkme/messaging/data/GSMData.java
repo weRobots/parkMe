@@ -3,15 +3,13 @@ package we.robots.parkme.messaging.data;
 public class GSMData
 {
 
-  private ClientData clientData;
+  private ClientData data;
 
   private String to;
 
   private ClientNotification notification;
-  
+
   private String topic;
-  
-  
 
   public String getTopic()
   {
@@ -43,14 +41,14 @@ public class GSMData
     this.to = to;
   }
 
-  public ClientData getClientData()
+  public ClientData getData()
   {
-    return clientData;
+    return data;
   }
 
-  public void setClientData(ClientData clientData)
+  public void setData(ClientData data)
   {
-    this.clientData = clientData;
+    this.data = data;
   }
 
 }
