@@ -2,12 +2,15 @@ package com.robots.we.parkme.operate;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 
 import com.robots.we.parkme.beans.CarPark;
 import com.robots.we.parkme.beans.Slot;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -17,6 +20,8 @@ public class CarParkGridLayout extends GridLayout {
 
     final Context context;
     int gridScale;
+    OnClickListener slotClickListener;
+    List<SlotClickListener> clickListeners = new ArrayList<SlotClickListener>();
 
     public CarParkGridLayout(Context context) {
         super(context);
@@ -53,6 +58,14 @@ public class CarParkGridLayout extends GridLayout {
             int rowHeight = height / carPark.getRaws();
 
             gridScale = (columnWidth < rowHeight) ? columnWidth : rowHeight;
+
+            // add a click lister
+            slotClickListener = new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    notifyListers((SlotView) v);
+                }
+            };
         }
     }
 
@@ -75,8 +88,30 @@ public class CarParkGridLayout extends GridLayout {
      * @param slot
      */
     public void insert(final Slot slot) {
-        addView(new SlotView(this.context, slot, gridScale));
+        SlotView slotView = new SlotView(this.context, slot, gridScale);
+        slotView.setClickable(true);
+        slotView.setOnClickListener(slotClickListener);
+        addView(slotView);
     }
 
 
+    public void registerSlotClickListener(SlotClickListener slotClickListener) {
+        // add a click lister
+        this.clickListeners.add(slotClickListener);
+
+    }
+
+    /**
+     * listener interface to catch a onClick event triggered for SlotView
+     */
+    public interface SlotClickListener {
+        public void onClick(SlotView v);
+    }
+
+    private void notifyListers(SlotView v) {
+        for (SlotClickListener slotClickListener :
+                this.clickListeners) {
+            slotClickListener.onClick(v);
+        }
+    }
 }

@@ -4,15 +4,24 @@
     tools:context=".HomeActivity">
 
     <item
-        android:id="@+id/action_refresh"
-        android:icon="@mipmap/refrsh"
-        android:orderInCategory="200"
-        android:title="Search"
+        android:id="@+id/action_map"
+        android:icon="@mipmap/map"
+        android:orderInCategory="400"
+        android:title="map"
         app:showAsAction="ifRoom"></item>
+
     <item
         android:id="@+id/action_location"
-        android:icon="@mipmap/location_active"
+        android:icon="@mipmap/location_inactive"
         android:orderInCategory="300"
-        android:title="User"
+        android:title="location_indicator"
         app:showAsAction="ifRoom"></item>
+
+    <item
+        android:id="@+id/action_refresh"
+        android:icon="@mipmap/refresh"
+        android:orderInCategory="200"
+        android:title="refresh"
+        app:showAsAction="ifRoom"></item>
+
 </menu>

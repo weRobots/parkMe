@@ -4,14 +4,14 @@ package com.robots.we.parkme.operate;
 import android.content.Context;
 import android.graphics.Color;
 import android.widget.GridLayout;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.robots.we.parkme.beans.Slot;
 
 /**
  * Created by supun.hettigoda on 11/30/2015.
  */
-public class SlotView extends TextView {
+public class SlotView extends ImageView {
     private final Slot slot;
     private final int gridScale;
 
