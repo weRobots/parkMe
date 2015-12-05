@@ -1,6 +1,7 @@
 package com.robots.we.parkme;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.gcm.play.android.GSMActivity;
 import com.robots.we.parkme.beans.CarPark;
 import com.robots.we.parkme.convert.CarParkXMLParser;
 import com.robots.we.parkme.gps.GPSTracker;
@@ -84,9 +86,6 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        // set up tool bar actions
-        setUpToolActions(toolbar);
-
         // Register BroadcastReceiver to track connection changes.
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         connectivityReceiver = new NetworkConnectivityReceiver();
@@ -106,20 +105,6 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
 
     private void buildUserActionHandler() {
         userActionHandler = new UserActionHandler(this);
-    }
-
-    private void setUpToolActions(Toolbar toolbar) {
-        toolbar.setOnMenuItemClickListener(
-                new Toolbar.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        // Handle refresh click
-                        if (item.getItemId() == R.id.action_refresh) {
-                            refreshUserOperationPage();
-                        }
-                        return true;
-                    }
-                });
     }
 
     // Refreshes the user operation display if the network connection is available.
@@ -170,7 +155,16 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case R.id.action_map:
+
+                Intent intent = new Intent(this, GSMActivity.class);
+                startActivity(intent);
+
+            case R.id.action_refresh:
+                refreshUserOperationPage();
+                break;
+        }
 
         return super.onOptionsItemSelected(item);
     }
