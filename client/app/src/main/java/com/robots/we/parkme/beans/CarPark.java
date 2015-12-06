@@ -10,8 +10,10 @@ import java.util.Set;
 public class CarPark {
 
     String id;
-    String centerLocation;
+    String centerLocationLat;
+    String centerLocationLog;
     Set<Slot> slots;
+    User admin;
 
     public String getId() {
         return id;
@@ -19,14 +21,6 @@ public class CarPark {
 
     public void setId(final String id) {
         this.id = id;
-    }
-
-    public String getCenterLocation() {
-        return centerLocation;
-    }
-
-    public void setCenterLocation(final String centerLocation) {
-        this.centerLocation = centerLocation;
     }
 
     public Set<Slot> getSlots() {
@@ -43,5 +37,29 @@ public class CarPark {
 
     public int getRaws() {
         return 10;
+    }
+
+    public String getCenterLocationLat() {
+        return centerLocationLat;
+    }
+
+    public void setCenterLocationLat(String centerLocationLat) {
+        this.centerLocationLat = centerLocationLat;
+    }
+
+    public String getCenterLocationLog() {
+        return centerLocationLog;
+    }
+
+    public void setCenterLocationLog(String centerLocationLog) {
+        this.centerLocationLog = centerLocationLog;
+    }
+
+    public User getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(User admin) {
+        this.admin = admin;
     }
 }

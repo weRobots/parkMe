@@ -11,6 +11,8 @@ import we.robots.parkme.park.Direction;
 import we.robots.parkme.park.Slot;
 import we.robots.parkme.park.SlotStatus;
 import we.robots.parkme.park.SlotType;
+import we.robots.parkme.user.User;
+import we.robots.parkme.user.UserRole;
 import we.robots.parkme.util.CarParkFileHandler;
 import we.robots.parkme.util.CommonUtil;
 
@@ -21,9 +23,122 @@ public class CarParkFileOperationTest {
 		CarParkFileHandler.save(officeCarPark, "01");
 	}
 
+	@Test
+	public void test_saveCarPark_09() {
+		final CarPark office_09_CarPark = createOfficeCarPark_09();
+		CarParkFileHandler.save(office_09_CarPark, "02");
+	}
+
+	private CarPark createOfficeCarPark_09() {
+
+		final CarPark office = new CarPark();
+		office.setId("02");
+		office.setAdmin(createAdmin("admin_02", "cambio_09_admin"));
+		office.setCenterLocationLat("1234365324");
+		office.setCenterLocationLog("786782345234");
+		final HashSet<Slot> slots = new HashSet<Slot>();
+
+		for (int i = 1; i < 13; i++) {
+			final Slot slot = new Slot();
+			slot.setId(Integer.toString(i));
+			slot.setSlotType(SlotType.VERTICAL);
+			slot.setNavigationDetail(createNewNavigateDetail());
+			slot.setStatus(SlotStatus.AVAILABLE);
+			slots.add(slot);
+		}
+
+		// link slots
+		final SlotAssistant slotAssistant = new SlotAssistant(
+				CommonUtil.convert(slots));
+
+		// slot 01
+		final Slot slot_1 = slotAssistant.getSlot("1");
+		slot_1.setColumnIndex(3);
+		slot_1.setRawIndex(0);
+		setNabours(slot_1, 0, "3", "3", null, null, "2", "2", null, null);
+
+		// slot 02
+		final Slot slot_2 = slotAssistant.getSlot("2");
+		slot_2.setColumnIndex(2);
+		slot_2.setRawIndex(0);
+		setNabours(slot_2, 0, "4", "4", null, null, null, null, "1", "1");
+
+		// slot 03
+		final Slot slot_3 = slotAssistant.getSlot("3");
+		slot_3.setColumnIndex(3);
+		slot_3.setRawIndex(2);
+		setNabours(slot_3, 1, "5", "5", "1", "1", "4", "4", null, null);
+
+		// slot 04
+		final Slot slot_4 = slotAssistant.getSlot("4");
+		slot_4.setColumnIndex(2);
+		slot_4.setRawIndex(2);
+		setNabours(slot_4, 1, "6", "6", "2", "2", null, null, "3", "3");
+
+		// slot 05
+		final Slot slot_5 = slotAssistant.getSlot("5");
+		slot_5.setColumnIndex(3);
+		slot_5.setRawIndex(4);
+		setNabours(slot_5, 2, "9", "9", "3", "3", "6", "6", null, null);
+
+		// slot 06
+		final Slot slot_6 = slotAssistant.getSlot("6");
+		slot_6.setColumnIndex(2);
+		slot_6.setRawIndex(4);
+		setNabours(slot_6, 2, "10", "10", "4", "4", "7", "8", "5", "5");
+
+		// slot 07
+		final Slot slot_7 = slotAssistant.getSlot("7");
+		slot_7.setSlotType(SlotType.HORIZONTAL);
+		slot_7.setColumnIndex(0);
+		slot_7.setRawIndex(4);
+		setNabours(slot_7, 3, null, null, "6", "6", null, null, "8", "8");
+
+		// slot 08
+		final Slot slot_8 = slotAssistant.getSlot("8");
+		slot_8.setSlotType(SlotType.HORIZONTAL);
+		slot_8.setColumnIndex(0);
+		slot_8.setRawIndex(5);
+		setNabours(slot_8, 3, null, null, "6", "6", "7", "7", "11", "11");
+
+		// slot 09
+		final Slot slot_9 = slotAssistant.getSlot("9");
+		slot_9.setColumnIndex(3);
+		slot_9.setRawIndex(6);
+		setNabours(slot_9, 3, null, null, "5", "5", "10", "10", null, null);
+
+		// slot 10
+		final Slot slot_10 = slotAssistant.getSlot("10");
+		slot_10.setColumnIndex(0);
+		slot_10.setRawIndex(6);
+		setNabours(slot_10, 3, null, null, "6", "6", "11", "12", "9", "9");
+
+		// slot 11
+		final Slot slot_11 = slotAssistant.getSlot("11");
+		slot_11.setSlotType(SlotType.HORIZONTAL);
+		slot_11.setColumnIndex(0);
+		slot_11.setRawIndex(6);
+		setNabours(slot_11, 4, null, null, "10", "10", "8", "8", "12", "12");
+
+		// slot 12
+		final Slot slot_12 = slotAssistant.getSlot("12");
+		slot_12.setSlotType(SlotType.HORIZONTAL);
+		slot_12.setColumnIndex(0);
+		slot_12.setRawIndex(7);
+		setNabours(slot_12, 4, null, null, "10", "10", "11", "11", null, null);
+
+		office.setSlots(slots);
+
+		return office;
+
+	}
+
 	private CarPark createOfficeCarPark() {
 		final CarPark office = new CarPark();
 		office.setId("01");
+		office.setAdmin(createAdmin("admin_01", "cambio_29_admin"));
+		office.setCenterLocationLat("1234365324");
+		office.setCenterLocationLog("786782345234");
 		final HashSet<Slot> slots = new HashSet<Slot>();
 
 		for (int i = 1; i < 21; i++) {
@@ -36,7 +151,8 @@ public class CarParkFileOperationTest {
 		}
 
 		// link slots
-		final SlotAssistant slotAssistant = new SlotAssistant(CommonUtil.convert(slots));
+		final SlotAssistant slotAssistant = new SlotAssistant(
+				CommonUtil.convert(slots));
 
 		// slot 01
 		final Slot slot_1 = slotAssistant.getSlot("1");
@@ -165,12 +281,22 @@ public class CarParkFileOperationTest {
 		return office;
 	}
 
+	private User createAdmin(String id, String name) {
+		User admin = new User();
+		admin.setMobileNumber("0776373232");
+		admin.setName(name);
+		admin.setRole(UserRole.ADMIN);
+		admin.setUserId(id);
+		return null;
+	}
+
 	private HashMap<Direction, String> createNewNavigateDetail() {
 		return new HashMap<Direction, String>();
 	}
 
-	private void setNabours(final Slot slot, final int level, final String bl, final String br, final String fl,
-			final String fr, final String lf, final String lb, final String rf, final String rb) {
+	private void setNabours(final Slot slot, final int level, final String bl,
+			final String br, final String fl, final String fr, final String lf,
+			final String lb, final String rf, final String rb) {
 		slot.setLevel(level);
 
 		final HashMap<Direction, String> detail = slot.getNavigationDetail();

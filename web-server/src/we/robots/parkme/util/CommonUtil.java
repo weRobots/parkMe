@@ -96,132 +96,121 @@ public final class CommonUtil {
 
 		return map;
 	}
-  public static String toXML(CarPark data)
-  {
-    XStream xstream = new XStream(new StaxDriver());
-    xstream.autodetectAnnotations(true);
-    return formatXml(xstream.toXML(data));
-  }
 
-  public static String toXML(ParkMeSaveData data)
-  {
-    XStream xstream = new XStream(new StaxDriver());
-    xstream.autodetectAnnotations(true);
-    return formatXml(xstream.toXML(data));
-  }
+	public static String toXML(CarPark data) {
+		XStream xstream = new XStream(new StaxDriver());
+		xstream.autodetectAnnotations(true);
+		return formatXml(xstream.toXML(data));
+	}
 
-  public static String formatXml(String xml) {
+	public static String toXML(ParkMeSaveData data) {
+		XStream xstream = new XStream(new StaxDriver());
+		xstream.autodetectAnnotations(true);
+		return formatXml(xstream.toXML(data));
+	}
 
-    try {
-      Transformer serializer = SAXTransformerFactory.newInstance().newTransformer();
+	public static String formatXml(String xml) {
 
-      serializer.setOutputProperty(OutputKeys.INDENT, "yes");
-      serializer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+		try {
+			Transformer serializer = SAXTransformerFactory.newInstance()
+					.newTransformer();
 
-      Source xmlSource = new SAXSource(new InputSource(new ByteArrayInputStream(xml.getBytes())));
-      StreamResult res = new StreamResult(new ByteArrayOutputStream());
+			serializer.setOutputProperty(OutputKeys.INDENT, "yes");
+			serializer.setOutputProperty(
+					"{http://xml.apache.org/xslt}indent-amount", "2");
 
-      serializer.transform(xmlSource, res);
+			Source xmlSource = new SAXSource(new InputSource(
+					new ByteArrayInputStream(xml.getBytes())));
+			StreamResult res = new StreamResult(new ByteArrayOutputStream());
 
-      return new String(((ByteArrayOutputStream) res.getOutputStream()).toByteArray());
+			serializer.transform(xmlSource, res);
 
-    } catch (Exception e) {
-      return xml;
-    }
-  }
-  
-  public static String read(String folder, String prefix, final String id)
-  {
-    final String file_path = folder + prefix + id + ".xml";
+			return new String(
+					((ByteArrayOutputStream) res.getOutputStream())
+							.toByteArray());
 
-    BufferedReader br;
-    final StringBuilder sb = new StringBuilder();
+		} catch (Exception e) {
+			return xml;
+		}
+	}
 
-    try
-    {
-      br = new BufferedReader(new FileReader(new File(file_path)));
+	public static String read(String folder, String prefix, final String id) {
+		final String file_path = folder + prefix + id + ".xml";
 
-      String line;
+		BufferedReader br;
+		final StringBuilder sb = new StringBuilder();
 
-      while ((line = br.readLine()) != null)
-      {
-        sb.append(line.trim());
-      }
+		try {
+			br = new BufferedReader(new FileReader(new File(file_path)));
 
-      br.close();
+			String line;
 
-    }
-    catch (FileNotFoundException e1)
-    {
-      e1.printStackTrace();
-    }
+			while ((line = br.readLine()) != null) {
+				sb.append(line.trim());
+			}
 
-    catch (IOException e)
-    {
-      e.printStackTrace();
-    }
+			br.close();
 
-    return sb.toString();
-  }
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
 
-  /**
-   * @param carPark
-   * @param id
-   * @return
-   */
-  public static boolean save(String folder, String prefix, ParkMeSaveData obj, String id)
-  {
-    final String file_path = folder + prefix + id + ".xml";
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 
-    BufferedWriter out = null;
+		return sb.toString();
+	}
 
-    try
-    {
-      out = new BufferedWriter(new FileWriter(file_path));
-      out.write(CommonUtil.toXML(obj));
+	/**
+	 * @param carPark
+	 * @param id
+	 * @return
+	 */
+	public static boolean save(String folder, String prefix,
+			ParkMeSaveData obj, String id) {
+		final String file_path = folder + prefix + id + ".xml";
 
-    }
-    catch (IOException e1)
-    {
+		BufferedWriter out = null;
 
-      e1.printStackTrace();
-    }
-    finally
-    {
-      if (out != null)
-      {
-        try
-        {
-          out.close();
-        }
-        catch (IOException e)
-        {
-        }
-      }
-    }
+		try {
+			out = new BufferedWriter(new FileWriter(file_path));
+			out.write(CommonUtil.toXML(obj));
 
-    return false;
-  }
-  
-  public static User readObjectFromXMLForUser(String xml)
-  {
+		} catch (IOException e1) {
 
-    XStream xstream = new XStream();
-    xstream.processAnnotations(User.class); // inform XStream to parse annotations in Data class
+			e1.printStackTrace();
+		} finally {
+			if (out != null) {
+				try {
+					out.close();
+				} catch (IOException e) {
+				}
+			}
+		}
 
-    User user = (User) xstream.fromXML(xml); // parse
-    return user;
+		return false;
+	}
 
-  }
-  
-  public static CarPark readObjectFromXMLForCarPark(String xml)
-  {
+	public static User readObjectFromXMLForUser(String xml) {
 
-    XStream xstream = new XStream();
-    xstream.processAnnotations(CarPark.class); // inform XStream to parse annotations in Data class
+		XStream xstream = new XStream();
+		xstream.processAnnotations(User.class); // inform XStream to parse
+												// annotations in Data class
 
-    CarPark user = (CarPark) xstream.fromXML(xml); // parse
-    return user;
+		User user = (User) xstream.fromXML(xml); // parse
+		return user;
 
-  }
+	}
+
+	public static CarPark readObjectFromXMLForCarPark(String xml) {
+
+		XStream xstream = new XStream();
+		xstream.processAnnotations(CarPark.class); // inform XStream to parse
+													// annotations in Data class
+
+		CarPark user = (CarPark) xstream.fromXML(xml); // parse
+		return user;
+
+	}
 }

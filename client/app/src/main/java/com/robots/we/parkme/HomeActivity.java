@@ -53,7 +53,7 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
     /**
      * Whether there is any internet connection.
      */
-    private static boolean dataConnected = false;
+    public static boolean DATA_CONNECTED = false;
 
     /**
      * The BroadcastReceiver that tracks network connectivity changes.
@@ -128,8 +128,8 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
     }
 
     private void refreshUserOperationPage() {
-        if (dataConnected) {
-            // AsyncTask subclass
+        if (DATA_CONNECTED) {
+            // execute refresh task
             new RefreshTask().execute();
         } else {
             showErrorPage();
@@ -175,7 +175,7 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeInfo = connMgr.getActiveNetworkInfo();
-        dataConnected = (activeInfo != null && activeInfo.isConnected());
+        DATA_CONNECTED = (activeInfo != null && activeInfo.isConnected());
     }
 
     @Override
@@ -188,16 +188,7 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
                 Toast.makeText(getApplicationContext(), R.string.connection_lost, Toast.LENGTH_SHORT).show();
                 dataConnected = false;
         }*/
-        dataConnected = true;
-    }
-
-    /**
-     * to register the  main car park view builder
-     *
-     * @param carParkViewBuilder
-     */
-    public void registerCarParkViewBuilder(CarParkViewBuilder carParkViewBuilder) {
-        this.carParkViewBuilder = carParkViewBuilder;
+        DATA_CONNECTED = true;
     }
 
     @Override
@@ -232,6 +223,7 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
         }
     }
 
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -243,5 +235,14 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
      */
     public interface CarParkViewBuilder {
         void build(CarPark carPark);
+    }
+
+    /**
+     * to register the  main car park view builder
+     *
+     * @param carParkViewBuilder
+     */
+    public void registerCarParkViewBuilder(CarParkViewBuilder carParkViewBuilder) {
+        this.carParkViewBuilder = carParkViewBuilder;
     }
 }

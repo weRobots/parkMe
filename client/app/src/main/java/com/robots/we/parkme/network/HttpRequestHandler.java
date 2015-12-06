@@ -23,6 +23,10 @@ public class HttpRequestHandler {
         return downloadUrl(NetworkConfigurations.URL_REFRESH);
     }
 
+    public static InputStream loadUser(String id) throws IOException {
+        return downloadUrl(NetworkConfigurations.URL_REFRESH);
+    }
+
     // Given a string representation of a URL, sets up a connection and gets
     // an input stream.
     private static InputStream downloadUrl(String urlString) throws IOException {

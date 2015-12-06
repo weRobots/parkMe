@@ -2,9 +2,9 @@ package we.robots.parkme.park;
 
 import java.util.Set;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
+import we.robots.parkme.user.User;
 
-import we.robots.parkme.user.Admin;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 /**
  * Defines the Car park.
@@ -12,90 +12,71 @@ import we.robots.parkme.user.Admin;
  * @author suppa
  */
 @XStreamAlias("carpark")
-public class CarPark
-{
+public class CarPark {
 
-  //
-  @XStreamAlias("id")
-  String id;
+	@XStreamAlias("id")
+	String id;
 
-  //
-  @XStreamAlias("center_lat")
-  String centerLocationLat;
+	@XStreamAlias("center_lat")
+	String centerLocationLat;
 
-  @XStreamAlias("center_log")
-  String centerLocationLog;
+	@XStreamAlias("center_log")
+	String centerLocationLog;
 
-  //
-  @XStreamAlias("admin")
-  Admin admin;
+	@XStreamAlias("admin")
+	User admin;
 
-  //
-  @XStreamAlias("slots")
-  Set<Slot> slots;
-  
-  @XStreamAlias("operationStatus")
-  OperationStatus operationStatus;
-    
+	@XStreamAlias("slots")
+	Set<Slot> slots;
 
-  public OperationStatus getOperationStatus()
-  {
-    return operationStatus;
-  }
+	@XStreamAlias("operationStatus")
+	OperationStatus operationStatus;
 
-  public void setOperationStatus(OperationStatus operationStatus)
-  {
-    this.operationStatus = operationStatus;
-  }
+	public OperationStatus getOperationStatus() {
+		return operationStatus;
+	}
 
-  public String getId()
-  {
-    return id;
-  }
+	public void setOperationStatus(OperationStatus operationStatus) {
+		this.operationStatus = operationStatus;
+	}
 
-  public void setId(final String id)
-  {
-    this.id = id;
-  }
- 
+	public String getId() {
+		return id;
+	}
 
-  public String getCenterLocationLat()
-  {
-    return centerLocationLat;
-  }
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  public void setCenterLocationLat(String centerLocationLat)
-  {
-    this.centerLocationLat = centerLocationLat;
-  }
+	public String getCenterLocationLat() {
+		return centerLocationLat;
+	}
 
-  public String getCenterLocationLog()
-  {
-    return centerLocationLog;
-  }
+	public void setCenterLocationLat(String centerLocationLat) {
+		this.centerLocationLat = centerLocationLat;
+	}
 
-  public void setCenterLocationLog(String centerLocationLog)
-  {
-    this.centerLocationLog = centerLocationLog;
-  }
+	public String getCenterLocationLog() {
+		return centerLocationLog;
+	}
 
-  public Admin getAdmin()
-  {
-    return admin;
-  }
+	public void setCenterLocationLog(String centerLocationLog) {
+		this.centerLocationLog = centerLocationLog;
+	}
 
-  public void setAdmin(final Admin admin)
-  {
-    this.admin = admin;
-  }
+	public User getAdmin() {
+		return admin;
+	}
 
-  public Set<Slot> getSlots()
-  {
-    return slots;
-  }
+	public void setAdmin(final User admin) {
+		this.admin = admin;
+	}
 
-  public void setSlots(final Set<Slot> slots)
-  {
-    this.slots = slots;
-  }
+	public Set<Slot> getSlots() {
+		return slots;
+	}
+
+	public void setSlots(final Set<Slot> slots) {
+		this.slots = slots;
+	}
 }

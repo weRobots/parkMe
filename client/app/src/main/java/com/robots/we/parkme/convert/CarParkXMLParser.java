@@ -60,9 +60,13 @@ public class CarParkXMLParser {
             if (name.equals(Tags.ID)) {
                 carPark.setId(readValue(parser, Tags.ID));
             }
-            // center
-            else if (name.equals(Tags.CENTER)) {
-                carPark.setCenterLocation(readValue(parser, Tags.CENTER));
+            // center lat
+            else if (name.equals(Tags.CENTER_LAT)) {
+                carPark.setCenterLocationLat(readValue(parser, Tags.CENTER_LAT));
+            }
+            // center log
+            else if (name.equals(Tags.CENTER_LOG)) {
+                carPark.setCenterLocationLog(readValue(parser, Tags.CENTER_LOG));
             }
             // slots
             else if (name.equals(Tags.SLOTS)) {

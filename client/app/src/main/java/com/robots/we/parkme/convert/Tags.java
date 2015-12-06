@@ -14,7 +14,8 @@ public class Tags {
     // car park data
     public static final String CAR_PARK = "carpark";
     public static final String ID = "id";
-    public static final String CENTER = "center";
+    public static final String CENTER_LAT = "center_lat";
+    public static final String CENTER_LOG = "center_log";
     public static final String SLOTS = "slots";
 
     // slot data

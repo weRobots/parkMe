@@ -7,8 +7,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.robots.we.parkme.R;
-
 /**
  * Created by supun.hettigoda on 12/4/2015.
  */
@@ -34,16 +32,17 @@ public class ActionPanel extends LinearLayout {
 
         // add  icon
         LinearLayout.LayoutParams icon_param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        icon_param.setMargins(10, 5, 5, 10);
         ImageView iconView = new ImageView(this.context);
         iconView.setLayoutParams(icon_param);
-        iconView.setImageResource(R.mipmap.notify);
+        iconView.setImageResource(this.icon);
         addView(iconView);
 
         // add text
         TextView textView = new TextView(this.context);
         textView.setText(this.actionText);
         LinearLayout.LayoutParams text_param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        text_param.setMargins(10, 0, 0, 0);
+        text_param.setMargins(0, 5, 5, 0);
         text_param.gravity = Gravity.CENTER_VERTICAL;
         textView.setLayoutParams(text_param);
         addView(textView);
@@ -67,5 +66,7 @@ public class ActionPanel extends LinearLayout {
         RELEASE,
 
         SEND_NOTIFICATION,
+
+        BLOCK
     }
 }

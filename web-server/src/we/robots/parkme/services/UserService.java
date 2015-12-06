@@ -54,7 +54,7 @@ public class UserService
     user.setName(name);
     user.setRegistrationToken(registrationToken);
     user.setVehichleNumber(vehichleNumber);
-    user.setRole(UserRole.ADMIN.toString());
+    user.setRole(UserRole.ADMIN);
     return UserHandler.getInstance().saveUserDetails(user);
   }
 

@@ -16,6 +16,8 @@ public class Slot {
 
     private SlotType slotType;
 
+    private User user;
+
     private HashMap<Direction, String> navigationDetail;
 
     public String getId() {
@@ -72,5 +74,13 @@ public class Slot {
 
     public void setRawIndex(int rawIndex) {
         this.rawIndex = rawIndex;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
