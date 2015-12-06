@@ -9,7 +9,7 @@ public class User implements ParkMeSaveData {
 	@XStreamAlias("registrationToken")
 	private String registrationToken;
 
-	@XStreamAlias("vehichleNumber")
+	@XStreamAlias("vehicleNumber")
 	private String vehichleNumber;
 
 	@XStreamAlias("mobileNumber")

@@ -1,7 +1,9 @@
 package we.robots.parkme;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -20,19 +22,42 @@ public class CarParkFileOperationTest {
 	@Test
 	public void test_saveCarPark() {
 		final CarPark officeCarPark = createOfficeCarPark();
-		CarParkFileHandler.save(officeCarPark, "01");
+		CarParkFileHandler.save(officeCarPark);
 	}
 
 	@Test
 	public void test_saveCarPark_09() {
 		final CarPark office_09_CarPark = createOfficeCarPark_09();
-		CarParkFileHandler.save(office_09_CarPark, "02");
+		CarParkFileHandler.save(office_09_CarPark);
+	}
+
+	@Test
+	public void test_all_configured() {
+
+		List<CarPark> all_configured = new ArrayList<CarPark>();
+
+		final CarPark office_main = new CarPark();
+		office_main.setId("cambio_main");
+		office_main.setAdmin(createAdmin("admin_01", "cambio_29_admin"));
+		office_main.setCenterLocationLat("1234365324");
+		office_main.setCenterLocationLog("786782345234");
+		all_configured.add(office_main);
+
+		//
+		final CarPark office_09 = new CarPark();
+		office_09.setId("cambio_09");
+		office_09.setAdmin(createAdmin("admin_02", "cambio_09_admin"));
+		office_09.setCenterLocationLat("1234365324");
+		office_09.setCenterLocationLog("786782345234");
+		all_configured.add(office_09);
+
+		CarParkFileHandler.saveAllConfigured(all_configured);
 	}
 
 	private CarPark createOfficeCarPark_09() {
 
 		final CarPark office = new CarPark();
-		office.setId("02");
+		office.setId("cambio_09");
 		office.setAdmin(createAdmin("admin_02", "cambio_09_admin"));
 		office.setCenterLocationLat("1234365324");
 		office.setCenterLocationLog("786782345234");
@@ -48,8 +73,7 @@ public class CarParkFileOperationTest {
 		}
 
 		// link slots
-		final SlotAssistant slotAssistant = new SlotAssistant(
-				CommonUtil.convert(slots));
+		final SlotAssistant slotAssistant = new SlotAssistant(CommonUtil.convert(slots));
 
 		// slot 01
 		final Slot slot_1 = slotAssistant.getSlot("1");
@@ -135,7 +159,7 @@ public class CarParkFileOperationTest {
 
 	private CarPark createOfficeCarPark() {
 		final CarPark office = new CarPark();
-		office.setId("01");
+		office.setId("cambio_main");
 		office.setAdmin(createAdmin("admin_01", "cambio_29_admin"));
 		office.setCenterLocationLat("1234365324");
 		office.setCenterLocationLog("786782345234");
@@ -151,8 +175,7 @@ public class CarParkFileOperationTest {
 		}
 
 		// link slots
-		final SlotAssistant slotAssistant = new SlotAssistant(
-				CommonUtil.convert(slots));
+		final SlotAssistant slotAssistant = new SlotAssistant(CommonUtil.convert(slots));
 
 		// slot 01
 		final Slot slot_1 = slotAssistant.getSlot("1");
@@ -294,9 +317,8 @@ public class CarParkFileOperationTest {
 		return new HashMap<Direction, String>();
 	}
 
-	private void setNabours(final Slot slot, final int level, final String bl,
-			final String br, final String fl, final String fr, final String lf,
-			final String lb, final String rf, final String rb) {
+	private void setNabours(final Slot slot, final int level, final String bl, final String br, final String fl,
+			final String fr, final String lf, final String lb, final String rf, final String rb) {
 		slot.setLevel(level);
 
 		final HashMap<Direction, String> detail = slot.getNavigationDetail();

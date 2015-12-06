@@ -1,4 +1,4 @@
-package com.robots.we.parkme.operate;
+package com.robots.we.parkme;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -7,6 +7,8 @@ import com.robots.we.parkme.beans.User;
 import com.robots.we.parkme.beans.UserRole;
 import com.robots.we.parkme.convert.UserXMLParser;
 import com.robots.we.parkme.network.HttpRequestHandler;
+
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +37,11 @@ public final class AuthenticationHandler {
         new userLoadTask().execute(userId);
     }
 
+    public static void save() {
+        // execute user loading  background task
+        new userSaveTask().execute(USER);
+    }
+
     // task to load user
     private static class userLoadTask extends AsyncTask<String, Void, User> {
 
@@ -47,6 +54,9 @@ public final class AuthenticationHandler {
             } catch (IOException e) {
                 Log.i(TAG, "user authentication error...");
                 return new User();
+            } catch (XmlPullParserException e) {
+                Log.i(TAG, "user authentication error, XML parsing fail...");
+                return new User();
             }
         }
 
@@ -55,6 +65,34 @@ public final class AuthenticationHandler {
             Log.i(TAG, "user:" + user.getName() + " , role:" + user.getRole() + " authenticated");
             AuthenticationHandler.USER = user;
             USER_PROFILE_BUILDER.buildUserProfile();
+        }
+    }
+
+    // task to load user
+    private static class userSaveTask extends AsyncTask<User, Void, User> {
+
+        @Override
+        protected User doInBackground(User... user) {
+            try {
+                // create car park view again for the latest server information
+                InputStream result = HttpRequestHandler.save(user[0]);
+                return UserXMLParser.parse(result);
+            } catch (IOException e) {
+                Log.i(TAG, "user authentication error...");
+                return new User();
+            } catch (XmlPullParserException e) {
+                Log.i(TAG, "user authentication error, XML parsing fail...");
+                e.printStackTrace();
+                return new User();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(User user) {
+            Log.i(TAG, "user:" + user.getName() + " , role:" + user.getRole() + " authenticated");
+            AuthenticationHandler.USER = user;
+            USER_PROFILE_BUILDER.buildUserProfile();
+            USER_PROFILE_BUILDER.updatePreferenceData();
         }
     }
 
@@ -73,5 +111,7 @@ public final class AuthenticationHandler {
      */
     public interface UserProfileBuilder {
         void buildUserProfile();
+
+        void updatePreferenceData();
     }
 }

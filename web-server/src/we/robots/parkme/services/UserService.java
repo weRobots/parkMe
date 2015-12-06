@@ -11,62 +11,53 @@ import we.robots.parkme.user.UserRole;
 import we.robots.parkme.util.UserHandler;
 
 @Path("/userService")
-public class UserService
-{
-  @GET
-  @Path("/saveUser")
-  @Produces(MediaType.APPLICATION_XML)
-  public String saveUser(@QueryParam("registrationToken")
-  String registrationToken, @QueryParam("vehichleNumber")
-  String vehichleNumber, @QueryParam("mobileNumber")
-  String mobileNumber, @QueryParam("name")
-  String name)
-  {
-    User user = new User();
-    user.setMobileNumber(mobileNumber);
-    user.setName(name);
-    user.setRegistrationToken(registrationToken);
-    user.setVehichleNumber(vehichleNumber);
+public class UserService {
+	@GET
+	@Path("/saveUser")
+	@Produces(MediaType.APPLICATION_XML)
+	public String saveUser(@QueryParam("registrationToken") String registrationToken,
+			@QueryParam("vehicleNumber") String vehichleNumber, @QueryParam("mobileNumber") String mobileNumber,
+			@QueryParam("name") String name, @QueryParam("id") String id) {
+		User user = new User();
 
-    return UserHandler.getInstance().saveUserDetails(user);
-  }
+		user.setUserId(id);
+		user.setMobileNumber(mobileNumber);
+		user.setName(name);
+		user.setRegistrationToken(registrationToken);
+		user.setVehichleNumber(vehichleNumber);
 
-  @GET
-  @Path("/readUser")
-  @Produces(MediaType.APPLICATION_XML)
-  public String readUser(@QueryParam("userId")
-  String userId)
-  {
-    return UserHandler.getInstance().readUserDetailsAsXML(userId);
-  }
+		return UserHandler.getInstance().saveUserDetails(user);
+	}
 
-  @GET
-  @Path("/createAdminUser")
-  @Produces(MediaType.APPLICATION_XML)
-  public String createAdminUser(@QueryParam("registrationToken")
-  String registrationToken, @QueryParam("vehichleNumber")
-  String vehichleNumber, @QueryParam("mobileNumber")
-  String mobileNumber, @QueryParam("name")
-  String name)
-  {
-    User user = new User();
-    user.setMobileNumber(mobileNumber);
-    user.setName(name);
-    user.setRegistrationToken(registrationToken);
-    user.setVehichleNumber(vehichleNumber);
-    user.setRole(UserRole.ADMIN);
-    return UserHandler.getInstance().saveUserDetails(user);
-  }
+	@GET
+	@Path("/readUser")
+	@Produces(MediaType.APPLICATION_XML)
+	public String readUser(@QueryParam("userId") String userId) {
+		return UserHandler.getInstance().readUserDetailsAsXML(userId);
+	}
 
-  @GET
-  @Path("/updateToken")
-  @Produces(MediaType.APPLICATION_XML)
-  public String updateToken(@QueryParam("registrationToken")
-  String registrationToken, @QueryParam("userId")
-  String userId)
-  {
-    User user = UserHandler.getInstance().readUserDetailsAsObj(userId);
-    user.setRegistrationToken(registrationToken);
-    return UserHandler.getInstance().saveUserDetails(user);
-  }
+	@GET
+	@Path("/createAdminUser")
+	@Produces(MediaType.APPLICATION_XML)
+	public String createAdminUser(@QueryParam("registrationToken") String registrationToken,
+			@QueryParam("vehichleNumber") String vehichleNumber, @QueryParam("mobileNumber") String mobileNumber,
+			@QueryParam("name") String name) {
+		User user = new User();
+		user.setMobileNumber(mobileNumber);
+		user.setName(name);
+		user.setRegistrationToken(registrationToken);
+		user.setVehichleNumber(vehichleNumber);
+		user.setRole(UserRole.ADMIN);
+		return UserHandler.getInstance().saveUserDetails(user);
+	}
+
+	@GET
+	@Path("/updateToken")
+	@Produces(MediaType.APPLICATION_XML)
+	public String updateToken(@QueryParam("registrationToken") String registrationToken,
+			@QueryParam("userId") String userId) {
+		User user = UserHandler.getInstance().readUserDetailsAsObj(userId);
+		user.setRegistrationToken(registrationToken);
+		return UserHandler.getInstance().saveUserDetails(user);
+	}
 }

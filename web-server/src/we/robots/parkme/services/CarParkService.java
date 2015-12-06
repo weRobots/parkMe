@@ -1,5 +1,6 @@
 package we.robots.parkme.services;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.ws.rs.GET;
@@ -21,63 +22,71 @@ import we.robots.parkme.util.CommonUtil;
 import we.robots.parkme.util.UserHandler;
 
 @Path("/carParkService")
-public class CarParkService
-{
+public class CarParkService {
 
-  @GET
-  @Path("/parkCare")
-  @Produces(MediaType.APPLICATION_XML)
-  public String parkCare(@QueryParam("carParkId")
-  String carParkId, @QueryParam("latitude")
-  String latitude, @QueryParam("longitude")
-  String longitude, @QueryParam("slotId")
-  String slotId, @QueryParam("userId")
-  String userId)
-  {
-    CarPark carPark = CommonUtil.readObjectFromXMLForCarPark(CarParkFileHandler.read(carParkId));
+	@GET
+	@Path("/parkCare")
+	@Produces(MediaType.APPLICATION_XML)
+	public String parkCare(@QueryParam("carParkId") String carParkId, @QueryParam("latitude") String latitude,
+			@QueryParam("longitude") String longitude, @QueryParam("slotId") String slotId,
+			@QueryParam("userId") String userId) {
+		CarPark carPark = CommonUtil.readObjectFromXMLForCarPark(CarParkFileHandler.readCarPark(carParkId));
 
-    if (CarParkManager.getInstance().isParkableCarPark(carPark, latitude, longitude))
-    {
-      CarPark savedParkData = CarParkManager.getInstance().saveSlot(carPark, slotId, userId, SlotStatus.ALLOCATED);
-      savedParkData.setOperationStatus(new OperationStatus(OPERATION_STATUS.SUCCESS, "Successfully park car"));
-      return CommonUtil.toXML(savedParkData);
+		if (CarParkManager.getInstance().isParkableCarPark(carPark, latitude, longitude)) {
+			CarPark savedParkData = CarParkManager.getInstance().saveSlot(carPark, slotId, userId,
+					SlotStatus.ALLOCATED);
+			savedParkData.setOperationStatus(new OperationStatus(OPERATION_STATUS.SUCCESS, "Successfully park car"));
+			return CommonUtil.toXML(savedParkData);
 
-    }
-    carPark.setOperationStatus(new OperationStatus(OPERATION_STATUS.FAIL,
-        "Fail to park car because user is not yet in the car park"));
-    return CommonUtil.toXML(carPark);
+		}
+		carPark.setOperationStatus(
+				new OperationStatus(OPERATION_STATUS.FAIL, "Fail to park car because user is not yet in the car park"));
+		return CommonUtil.toXML(carPark);
 
-  }
+	}
 
-  @GET
-  @Path("/releaseCar")
-  @Produces(MediaType.APPLICATION_XML)
-  public String releaseCar(@QueryParam("carParkId")
-  String carParkId, @QueryParam("userId")
-  String userId)
-  {
-    CarPark carPark = CommonUtil.readObjectFromXMLForCarPark(CarParkFileHandler.read(carParkId));
-    CarPark savedParkData = CarParkManager.getInstance().releaseCar(carPark, userId);
-    savedParkData.setOperationStatus(new OperationStatus(OPERATION_STATUS.SUCCESS, "Removed user from parked slot"));
-    return CommonUtil.toXML(savedParkData);
+	@GET
+	@Path("/releaseCar")
+	@Produces(MediaType.APPLICATION_XML)
+	public String releaseCar(@QueryParam("carParkId") String carParkId, @QueryParam("userId") String userId) {
+		CarPark carPark = CommonUtil.readObjectFromXMLForCarPark(CarParkFileHandler.readCarPark(carParkId));
+		CarPark savedParkData = CarParkManager.getInstance().releaseCar(carPark, userId);
+		savedParkData
+				.setOperationStatus(new OperationStatus(OPERATION_STATUS.SUCCESS, "Removed user from parked slot"));
+		return CommonUtil.toXML(savedParkData);
 
-  }
+	}
 
-  @GET
-  @Path("/sendUpdateToBlockingSlots")
-  @Produces(MediaType.APPLICATION_XML)
-  public String sendUpdateToBlockingSlots(@QueryParam("carParkId")
-  String carParkId, @QueryParam("userId")
-  String userId)
-  {
-    CarPark carPark = CommonUtil.readObjectFromXMLForCarPark(CarParkFileHandler.read(carParkId));
-    Slot parkedSlot = CarParkManager.getInstance().identifyParkedSlot(carPark, userId);
-    Set<Slot> slotsToMove = CarParkManager.getInstance().identifySlotsToMoveTheCar(carPark, parkedSlot.getId());
+	@GET
+	@Path("/sendUpdateToBlockingSlots")
+	@Produces(MediaType.APPLICATION_XML)
+	public String sendUpdateToBlockingSlots(@QueryParam("carParkId") String carParkId,
+			@QueryParam("userId") String userId) {
+		CarPark carPark = CommonUtil.readObjectFromXMLForCarPark(CarParkFileHandler.readCarPark(carParkId));
+		Slot parkedSlot = CarParkManager.getInstance().identifyParkedSlot(carPark, userId);
+		Set<Slot> slotsToMove = CarParkManager.getInstance().identifySlotsToMoveTheCar(carPark, parkedSlot.getId());
 
-    OPERATION_STATUS status = CloudMessageSender.getInstance().sendGCM("Please remove your car", slotsToMove);
+		OPERATION_STATUS status = CloudMessageSender.getInstance().sendGCM("Please remove your car", slotsToMove);
 
-    CarPark savedParkData = CarParkManager.getInstance().releaseCar(carPark, userId);
-    savedParkData.setOperationStatus(new OperationStatus(status, "Removed user from parked slot"));
-    return CommonUtil.toXML(savedParkData);
-  }
+		CarPark savedParkData = CarParkManager.getInstance().releaseCar(carPark, userId);
+		savedParkData.setOperationStatus(new OperationStatus(status, "Removed user from parked slot"));
+		return CommonUtil.toXML(savedParkData);
+	}
+
+	@GET
+	@Path("/find")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String findNearestCarPark(@QueryParam("lat") String lattitude, @QueryParam("log") String lognitude) {
+
+		List<CarPark> allList = CommonUtil.readCarParkList(CarParkFileHandler.readAll());
+
+		for (CarPark carPark : allList) {
+			if (CarParkManager.getInstance().isParkableCarPark(carPark, lattitude, lognitude)) {
+				return carPark.getId();
+			}
+		}
+
+		return "";
+	}
+
 }

@@ -36,5 +36,4 @@ public class ParkmeInstanceIDListenerService extends InstanceIDListenerService {
         Intent intent = new Intent(this, RegistrationIntentService.class);
         startService(intent);
     }
-    // [END refresh_token]
 }

@@ -7,6 +7,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.robots.we.parkme.beans.Slot;
+
 /**
  * Created by supun.hettigoda on 12/4/2015.
  */
@@ -16,13 +18,15 @@ public class ActionPanel extends LinearLayout {
     private final String actionText;
     private final ActionType actionType;
     private final Context context;
+    private final Slot slot;
 
-    public ActionPanel(Context context, final int icon, final String actionText, final ActionType actionType) {
+    public ActionPanel(Context context, Slot slot, final int icon, final String actionText, final ActionType actionType) {
         super(context);
         this.context = context;
         this.icon = icon;
         this.actionText = actionText;
         this.actionType = actionType;
+        this.slot = slot;
         initialize();
     }
 
@@ -58,6 +62,10 @@ public class ActionPanel extends LinearLayout {
 
     public ActionType getActionType() {
         return actionType;
+    }
+
+    public Slot getSlot() {
+        return slot;
     }
 
     public enum ActionType {

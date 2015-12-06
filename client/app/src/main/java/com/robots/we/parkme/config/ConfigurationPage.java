@@ -13,13 +13,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.robots.we.parkme.HomeActivity;
 import com.robots.we.parkme.R;
 import com.robots.we.parkme.UserPreferences;
 import com.robots.we.parkme.beans.User;
-import com.robots.we.parkme.operate.AuthenticationHandler;
+import com.robots.we.parkme.AuthenticationHandler;
 
 /**
  * Created by suppa on 27/11/2015.
@@ -47,6 +48,33 @@ public class ConfigurationPage extends Fragment implements AuthenticationHandler
 
         // load user
         loadUser();
+
+        // set up saving actions
+        Button saveButton = (Button) userProfileView.findViewById(R.id.button_save);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveUser();
+            }
+        });
+        Button signButton = (Button) userProfileView.findViewById(R.id.button_sign);
+        signButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveUser();
+            }
+        });
+
+        // set up searching action
+        ImageView buttonLocation = (ImageView) userProfileView.findViewById(R.id.button_location);
+        buttonLocation.setClickable(true);
+        signButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                search();
+            }
+        });
+
 
         // add user profile toggle action
         buttonUserProfile = (Button) rootView.findViewById(R.id.button_user_profile);
@@ -89,7 +117,7 @@ public class ConfigurationPage extends Fragment implements AuthenticationHandler
         EditText mobile = (EditText) userProfileView.findViewById(R.id.mobile_no);
         mobile.setText(user.getMobileNumber());
 
-        // mobile no
+        // role
         TextView role = (TextView) userProfileView.findViewById(R.id.role);
         role.setText(user.getRole().toString());
 
@@ -111,6 +139,15 @@ public class ConfigurationPage extends Fragment implements AuthenticationHandler
         userProfileView.setLayoutParams(params);
     }
 
+    @Override
+    public void updatePreferenceData() {
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences((HomeActivity) getActivity());
+        String userId = sharedPreferences
+                .getString(UserPreferences.USER_ID, null);
+        sharedPreferences.edit().putString(UserPreferences.USER_ID, AuthenticationHandler.USER.getUserId()).apply();
+    }
+
     private void loadUser() {
         if (HomeActivity.DATA_CONNECTED) {
             // load user
@@ -120,6 +157,38 @@ public class ConfigurationPage extends Fragment implements AuthenticationHandler
             String userId = sharedPreferences
                     .getString(UserPreferences.USER_ID, null);
             AuthenticationHandler.load(userId);
+        }
+    }
+
+    private void saveUser() {
+        if (HomeActivity.DATA_CONNECTED) {
+            mapUIDataToUser();
+            AuthenticationHandler.save();
+        }
+    }
+
+    private void mapUIDataToUser() {
+
+        // get default preferences to get user id
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences((HomeActivity) getActivity());
+        String userId = sharedPreferences
+                .getString(UserPreferences.USER_ID, null);
+        AuthenticationHandler.USER.setUserId(userId);
+
+        // name
+        EditText nameField = (EditText) userProfileView.findViewById(R.id.name_value);
+        AuthenticationHandler.USER.setName(nameField.getText().toString());
+
+        // mobile no
+        EditText mobile = (EditText) userProfileView.findViewById(R.id.mobile_no);
+        AuthenticationHandler.USER.setMobileNumber(mobile.getText().toString());
+    }
+
+    private void search() {
+        if (HomeActivity.DATA_CONNECTED) {
+
+
         }
     }
 }

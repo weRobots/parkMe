@@ -43,7 +43,7 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
     /**
      * Client to connect to google play services
      */
-    private GPSTracker gpsTracker;
+    public static GPSTracker GPS_TRACKER;
 
     /**
      * action handler
@@ -63,7 +63,7 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
     /**
      * car park view handler
      */
-    CarParkViewBuilder carParkViewBuilder;
+    public static CarParkViewBuilder CAR_PARK_VIEW_BUILDER;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -100,7 +100,7 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
     }
 
     private void buildGPSTracker() {
-        gpsTracker = new GPSTracker(this);
+        GPS_TRACKER = new GPSTracker(this);
     }
 
     private void buildUserActionHandler() {
@@ -113,7 +113,7 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
         super.onStart();
 
         // start gps tracking
-        gpsTracker.start();
+        GPS_TRACKER.start();
 
         // update data connection availability on start up
         updateConnectedFlags();
@@ -146,7 +146,7 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_home, menu);
-        gpsTracker.registerIndicator(menu.findItem(R.id.action_location));
+        GPS_TRACKER.registerIndicator(menu.findItem(R.id.action_location));
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -217,8 +217,8 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
 
         @Override
         protected void onPostExecute(CarPark carPark) {
-            if (HomeActivity.this.carParkViewBuilder != null) {
-                HomeActivity.this.carParkViewBuilder.build(carPark);
+            if (HomeActivity.this.CAR_PARK_VIEW_BUILDER != null) {
+                HomeActivity.this.CAR_PARK_VIEW_BUILDER.build(carPark);
             }
         }
     }
@@ -227,7 +227,7 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
     @Override
     protected void onStop() {
         super.onStop();
-        gpsTracker.stop();
+        GPS_TRACKER.stop();
     }
 
     /**
@@ -243,6 +243,6 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
      * @param carParkViewBuilder
      */
     public void registerCarParkViewBuilder(CarParkViewBuilder carParkViewBuilder) {
-        this.carParkViewBuilder = carParkViewBuilder;
+        this.CAR_PARK_VIEW_BUILDER = carParkViewBuilder;
     }
 }

@@ -3,6 +3,8 @@ package com.robots.we.parkme.operate;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,9 +14,19 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import com.robots.we.parkme.AuthenticationHandler;
+import com.robots.we.parkme.HomeActivity;
 import com.robots.we.parkme.R;
+import com.robots.we.parkme.beans.CarPark;
 import com.robots.we.parkme.beans.Slot;
+import com.robots.we.parkme.beans.SlotType;
+import com.robots.we.parkme.convert.CarParkXMLParser;
+import com.robots.we.parkme.network.HttpRequestHandler;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,10 +37,11 @@ import java.util.List;
  */
 public class UserActionHandler {
 
-    private final Activity context;
+    private static final String TAG = "UserActionHandler";
+    private final HomeActivity context;
 
 
-    public UserActionHandler(Activity context) {
+    public UserActionHandler(HomeActivity context) {
         this.context = context;
     }
 
@@ -72,10 +85,10 @@ public class UserActionHandler {
             // current user slot
             case MY_SLOT:
                 // send move notifications
-                actions.add(new ActionPanel(context, R.mipmap.notify, "send notifications", ActionPanel.ActionType.SEND_NOTIFICATION));
+                actions.add(new ActionPanel(context, v, R.mipmap.notify, "send notifications", ActionPanel.ActionType.SEND_NOTIFICATION));
 
                 // release
-                actions.add(new ActionPanel(context, R.mipmap.release, "release", ActionPanel.ActionType.RELEASE));
+                actions.add(new ActionPanel(context, v, R.mipmap.release, "release", ActionPanel.ActionType.RELEASE));
                 break;
 
             // already allocated slot
@@ -86,28 +99,42 @@ public class UserActionHandler {
 
                 if (AuthenticationHandler.isAdmin())
                     // admin can release
-                    actions.add(new ActionPanel(context, R.mipmap.release, "release", ActionPanel.ActionType.RELEASE));
+                    actions.add(new ActionPanel(context, v, R.mipmap.release, "release", ActionPanel.ActionType.RELEASE));
 
 
                 break;
             case AVAILABLE:
                 if (AuthenticationHandler.isAdmin())
                     // admin can block
-                    actions.add(new ActionPanel(context, R.mipmap.block, "block", ActionPanel.ActionType.BLOCK));
+                    actions.add(new ActionPanel(context, v, R.mipmap.block, "block", ActionPanel.ActionType.BLOCK));
 
                 else
-                    actions.add(new ActionPanel(context, R.mipmap.allocate, "allocate for me", ActionPanel.ActionType.ALLOCATE));
+                    actions.add(new ActionPanel(context, v, R.mipmap.allocate, "allocate for me", ActionPanel.ActionType.ALLOCATE));
 
                 break;
             case BLOCKED:
                 if (AuthenticationHandler.isAdmin())
                     // admin can release
-                    actions.add(new ActionPanel(context, R.mipmap.release, "release", ActionPanel.ActionType.RELEASE));
+                    actions.add(new ActionPanel(context, v, R.mipmap.release, "release", ActionPanel.ActionType.RELEASE));
 
                 else
                     // view details
                     // TODO view
                     break;
+        }
+
+
+        // add action performer
+        for (ActionPanel actionPanel :
+                actions) {
+            actionPanel.setClickable(true);
+            actionPanel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    handleActionPerformed((ActionPanel) v);
+                }
+            });
+
         }
 
         return actions;
@@ -130,4 +157,47 @@ public class UserActionHandler {
 
         return layout;
     }
+
+    private void handleActionPerformed(ActionPanel actionPanel) {
+        switch (actionPanel.getActionType()) {
+            case ALLOCATE:
+                actionPanel.getSlot();
+                break;
+            case BLOCK:
+                break;
+            case RELEASE:
+                break;
+            case SEND_NOTIFICATION:
+                break;
+        }
+    }
+
+    //
+    // task to load user
+    private class allocateTask extends AsyncTask<Slot, Void, CarPark> {
+
+        @Override
+        protected CarPark doInBackground(Slot... slot) {
+            try {
+                // create car park view again for the latest server information
+                InputStream result = HttpRequestHandler.alocate(slot[0]);
+                return CarParkXMLParser.parse(result);
+            } catch (IOException e) {
+                Log.i(TAG, "allocation unsuccessful");
+                return null;
+            } catch (XmlPullParserException e) {
+                Log.i(TAG, "allocation unsuccessful XML error");
+
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(CarPark carPark) {
+            Log.i(TAG, "allocation success..");
+
+        }
+    }
+
+
 }

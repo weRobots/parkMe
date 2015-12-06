@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import javax.xml.transform.OutputKeys;
@@ -63,24 +64,21 @@ public final class CommonUtil {
 			}
 		}
 
-		throw new IllegalArgumentException(
-				"arguments are not valid for the operation");
+		throw new IllegalArgumentException("arguments are not valid for the operation");
 	}
 
 	/**
 	 * @param set
 	 * @param element
 	 */
-	public static void addAllSafely(final Set<Slot> set,
-			final Set<Slot> elements) {
+	public static void addAllSafely(final Set<Slot> set, final Set<Slot> elements) {
 		if (checkNotNull(set)) {
 			if (checkNotNullAndNotEmpty(elements)) {
 				set.addAll(elements);
 			}
 		}
 
-		throw new IllegalArgumentException(
-				"arguments are not valid for the operation");
+		throw new IllegalArgumentException("arguments are not valid for the operation");
 	}
 
 	/**
@@ -103,6 +101,12 @@ public final class CommonUtil {
 		return formatXml(xstream.toXML(data));
 	}
 
+	public static String toXML(List<CarPark> data) {
+		XStream xstream = new XStream(new StaxDriver());
+		xstream.autodetectAnnotations(true);
+		return formatXml(xstream.toXML(data));
+	}
+
 	public static String toXML(ParkMeSaveData data) {
 		XStream xstream = new XStream(new StaxDriver());
 		xstream.autodetectAnnotations(true);
@@ -112,22 +116,17 @@ public final class CommonUtil {
 	public static String formatXml(String xml) {
 
 		try {
-			Transformer serializer = SAXTransformerFactory.newInstance()
-					.newTransformer();
+			Transformer serializer = SAXTransformerFactory.newInstance().newTransformer();
 
 			serializer.setOutputProperty(OutputKeys.INDENT, "yes");
-			serializer.setOutputProperty(
-					"{http://xml.apache.org/xslt}indent-amount", "2");
+			serializer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 
-			Source xmlSource = new SAXSource(new InputSource(
-					new ByteArrayInputStream(xml.getBytes())));
+			Source xmlSource = new SAXSource(new InputSource(new ByteArrayInputStream(xml.getBytes())));
 			StreamResult res = new StreamResult(new ByteArrayOutputStream());
 
 			serializer.transform(xmlSource, res);
 
-			return new String(
-					((ByteArrayOutputStream) res.getOutputStream())
-							.toByteArray());
+			return new String(((ByteArrayOutputStream) res.getOutputStream()).toByteArray());
 
 		} catch (Exception e) {
 			return xml;
@@ -162,36 +161,6 @@ public final class CommonUtil {
 		return sb.toString();
 	}
 
-	/**
-	 * @param carPark
-	 * @param id
-	 * @return
-	 */
-	public static boolean save(String folder, String prefix,
-			ParkMeSaveData obj, String id) {
-		final String file_path = folder + prefix + id + ".xml";
-
-		BufferedWriter out = null;
-
-		try {
-			out = new BufferedWriter(new FileWriter(file_path));
-			out.write(CommonUtil.toXML(obj));
-
-		} catch (IOException e1) {
-
-			e1.printStackTrace();
-		} finally {
-			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException e) {
-				}
-			}
-		}
-
-		return false;
-	}
-
 	public static User readObjectFromXMLForUser(String xml) {
 
 		XStream xstream = new XStream();
@@ -211,6 +180,18 @@ public final class CommonUtil {
 
 		CarPark user = (CarPark) xstream.fromXML(xml); // parse
 		return user;
+
+	}
+
+	public static List<CarPark> readCarParkList(String xml) {
+
+		XStream xstream = new XStream();
+		xstream.processAnnotations(CarPark.class); // inform XStream to parse
+													// annotations in Data class
+
+		@SuppressWarnings("unchecked")
+		List<CarPark> list = (List<CarPark>) xstream.fromXML(xml); // parse
+		return list;
 
 	}
 }

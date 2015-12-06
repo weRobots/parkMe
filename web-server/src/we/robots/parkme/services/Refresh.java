@@ -16,6 +16,6 @@ public class Refresh {
 	@Produces(MediaType.APPLICATION_XML)
 	public String refresh(@QueryParam("id") String id) {
 
-		return CarParkFileHandler.read(id);
+		return CarParkFileHandler.readCarPark(id);
 	}
 }
