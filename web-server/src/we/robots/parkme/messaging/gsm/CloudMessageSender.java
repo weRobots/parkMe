@@ -1,4 +1,4 @@
-package we.robots.parkme.messaging;
+package we.robots.parkme.messaging.gsm;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,6 +10,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import we.robots.parkme.messaging.data.ClientData;
+import we.robots.parkme.messaging.data.ClientNotification;
 import we.robots.parkme.messaging.data.GSMData;
 import we.robots.parkme.park.OperationStatus.OPERATION_STATUS;
 import we.robots.parkme.park.Slot;
@@ -53,11 +54,11 @@ public class CloudMessageSender {
 		GSMData gsmData = new GSMData();
 		gsmData.setTo(user.getRegistrationToken());
 
-//		ClientNotification clientNotification = new ClientNotification();
-//		clientNotification.setBody(notification);
-//		clientNotification.setIcon("parkme");
-//		clientNotification.setTitle("ParkMe: Notification");
-//		gsmData.setNotification(clientNotification);
+		ClientNotification clientNotification = new ClientNotification();
+		clientNotification.setBody(notification);
+		clientNotification.setIcon("parkme");
+		clientNotification.setTitle("ParkMe: Notification");
+		gsmData.setNotification(clientNotification);
 		
 		ClientData clientData = new ClientData();
 		clientData.setUserId(user.getUserId());

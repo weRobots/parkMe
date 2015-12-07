@@ -10,7 +10,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import we.robots.parkme.manage.CarParkManager;
-import we.robots.parkme.messaging.CloudMessageSender;
+import we.robots.parkme.messaging.gsm.CloudMessageSender;
 import we.robots.parkme.park.CarPark;
 import we.robots.parkme.park.OperationStatus;
 import we.robots.parkme.park.OperationStatus.OPERATION_STATUS;
