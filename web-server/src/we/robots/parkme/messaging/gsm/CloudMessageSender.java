@@ -1,4 +1,4 @@
-package we.robots.parkme.messaging;
+package we.robots.parkme.messaging.gsm;
 
 import java.io.IOException;
 import java.io.OutputStream;
