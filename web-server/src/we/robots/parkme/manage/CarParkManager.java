@@ -23,6 +23,18 @@ public class CarParkManager {
 	public static CarParkManager getInstance() {
 		return instance;
 	}
+	
+  private boolean isSlotAvailableForParking(CarPark carPark, String slotId)
+  {
+    for (Slot slot : carPark.getSlots())
+    {
+      if (slot.getId().equals(slotId) && SlotStatus.AVAILABLE.equals(slot.getStatus()))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
 
 	public CarPark saveSlot(CarPark carPark, String slotId, String userId, SlotStatus slotStatus) {
 		User user = UserHandler.getInstance().readUserDetailsAsObj(userId);
@@ -65,6 +77,19 @@ public class CarParkManager {
 		}
 		return null;
 	}
+	
+	/**
+	 * Check if CarPark is near the user and if the slot user trying to park is unoccupied.
+	 * @param carPark
+	 * @param lat
+	 * @param longi
+	 * @param slotId
+	 * @return
+	 */
+  public boolean isParkable(CarPark carPark, String lat, String longi,String slotId)
+  {
+    return isParkableCarPark(carPark, lat, longi) && isSlotAvailableForParking(carPark, slotId);
+  }
 
 	public boolean isParkableCarPark(CarPark carPark, String lat, String longi) {
 		double distance = DistanceCalculator.distance(Double.valueOf(carPark.getCenterLocationLat()),

@@ -10,17 +10,19 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import we.robots.parkme.manage.CarParkManager;
-import we.robots.parkme.messaging.CloudMessageSender;
+import we.robots.parkme.messaging.gsm.CloudMessageSender;
 import we.robots.parkme.park.CarPark;
 import we.robots.parkme.park.OperationStatus;
+import we.robots.parkme.park.OperationStatus.OPERATION_STATUS;
 import we.robots.parkme.park.Slot;
 import we.robots.parkme.park.SlotStatus;
-import we.robots.parkme.park.OperationStatus.OPERATION_STATUS;
-import we.robots.parkme.user.User;
 import we.robots.parkme.util.CarParkFileHandler;
 import we.robots.parkme.util.CommonUtil;
-import we.robots.parkme.util.UserHandler;
-
+/**
+ * Opens up operations for the car park
+ * @author Navod.Eranda
+ *
+ */
 @Path("/carParkService")
 public class CarParkService {
 
@@ -32,16 +34,16 @@ public class CarParkService {
 			@QueryParam("userId") String userId) {
 		CarPark carPark = CommonUtil.readObjectFromXMLForCarPark(CarParkFileHandler.readCarPark(carParkId));
 
-		if (CarParkManager.getInstance().isParkableCarPark(carPark, latitude, longitude)) {
+		if (CarParkManager.getInstance().isParkable(carPark, latitude, longitude, slotId)) {
 			CarPark savedParkData = CarParkManager.getInstance().saveSlot(carPark, slotId, userId,
 					SlotStatus.ALLOCATED);
-			savedParkData.setOperationStatus(new OperationStatus(OPERATION_STATUS.SUCCESS, "Successfully park car"));
+			savedParkData.setOperationStatus(new OperationStatus(OPERATION_STATUS.SUCCESS, "Successfully parked car"));
 			return CommonUtil.toXML(savedParkData);
 
 		}
-		carPark.setOperationStatus(
-				new OperationStatus(OPERATION_STATUS.FAIL, "Fail to park car because user is not yet in the car park"));
-		return CommonUtil.toXML(carPark);
+    carPark.setOperationStatus(new OperationStatus(OPERATION_STATUS.FAIL,
+        "Fail to park car because user is not yet in the car park or Slot was occupied by another car"));
+    return CommonUtil.toXML(carPark);
 
 	}
 
@@ -66,11 +68,11 @@ public class CarParkService {
 		Slot parkedSlot = CarParkManager.getInstance().identifyParkedSlot(carPark, userId);
 		Set<Slot> slotsToMove = CarParkManager.getInstance().identifySlotsToMoveTheCar(carPark, parkedSlot.getId());
 
-		OPERATION_STATUS status = CloudMessageSender.getInstance().sendGCM("Please remove your car", slotsToMove);
-
-		CarPark savedParkData = CarParkManager.getInstance().releaseCar(carPark, userId);
-		savedParkData.setOperationStatus(new OperationStatus(status, "Removed user from parked slot"));
-		return CommonUtil.toXML(savedParkData);
+		OPERATION_STATUS operationStatus = CloudMessageSender.getInstance().sendGCM("Please remove your car", slotsToMove);
+		carPark.setOperationStatus(new OperationStatus(operationStatus, "Sent messages for users to remove their car(s)"));
+//		CarPark savedParkData = CarParkManager.getInstance().releaseCar(carPark, userId);
+//		savedParkData.setOperationStatus(new OperationStatus(status, "Removed user from parked slot"));
+		return CommonUtil.toXML(carPark);
 	}
 
 	@GET

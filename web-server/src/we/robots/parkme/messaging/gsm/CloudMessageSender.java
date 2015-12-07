@@ -1,4 +1,4 @@
-package we.robots.parkme.messaging;
+package we.robots.parkme.messaging.gsm;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -15,10 +15,22 @@ import we.robots.parkme.messaging.data.GSMData;
 import we.robots.parkme.park.OperationStatus.OPERATION_STATUS;
 import we.robots.parkme.park.Slot;
 import we.robots.parkme.user.User;
-
+/**
+ * Sends messages for the Google Cloud Messaging platform
+ * @author Navod.Eranda
+ *
+ */
 public class CloudMessageSender {
 
 	private static CloudMessageSender instance = new CloudMessageSender();
+	
+	private static final String GSM_URL = "https://gcm-http.googleapis.com/gcm/send";
+	private static final String GSM_API_KEY = "key=" + "AIzaSyB-tUxv9kfbxNU3sNJCo6gqIBl35RYxXHQ";
+	private static final String CONTENT_TYPE = "application/json";
+	
+	private static final String AUTHORIZATION = "Authorization";
+	private static final String POST = "POST";
+	private static final String CONTENT_TYPE_HEADER = "Content-Type";
 
 	public static CloudMessageSender getInstance() {
 		return instance;
@@ -46,8 +58,8 @@ public class CloudMessageSender {
 		clientNotification.setBody(notification);
 		clientNotification.setIcon("parkme");
 		clientNotification.setTitle("ParkMe: Notification");
-
 		gsmData.setNotification(clientNotification);
+		
 		ClientData clientData = new ClientData();
 		clientData.setUserId(user.getUserId());
 
@@ -73,11 +85,11 @@ public class CloudMessageSender {
 			jGcmData.put("data", jData);
 
 			// Create connection to send GCM Message request.
-			URL url = new URL("https://gcm-http.googleapis.com/gcm/send");
+			URL url = new URL(GSM_URL);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestProperty("Authorization", "key=" + "AIzaSyB-tUxv9kfbxNU3sNJCo6gqIBl35RYxXHQ");
-			conn.setRequestProperty("Content-Type", "application/json");
-			conn.setRequestMethod("POST");
+			conn.setRequestProperty(AUTHORIZATION, GSM_API_KEY);
+			conn.setRequestProperty(CONTENT_TYPE_HEADER,CONTENT_TYPE );
+			conn.setRequestMethod(POST);
 			conn.setDoOutput(true);
 
 			// Send GCM message content.
