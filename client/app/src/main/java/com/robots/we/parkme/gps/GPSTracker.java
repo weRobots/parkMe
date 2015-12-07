@@ -34,10 +34,6 @@ public final class GPSTracker implements ConnectionCallbacks, OnConnectionFailed
      */
     private MenuItem indicator;
 
-    // flag for GPS status
-    boolean isGPSEnabled = false;
-
-    Location location; // location
     double latitude; // latitude
     double longitude; // longitude
 
@@ -47,8 +43,9 @@ public final class GPSTracker implements ConnectionCallbacks, OnConnectionFailed
         getLocation();
     }
 
-    public Location getLocation() {
-        return location;
+    public Location getCurrentLocation() {
+        if (isConnected())
+            return LocationServices.FusedLocationApi.getLastLocation(mGPSClient);
     }
 
     /**
@@ -167,4 +164,7 @@ public final class GPSTracker implements ConnectionCallbacks, OnConnectionFailed
             else
                 indicator.setIcon(R.mipmap.location_inactive);
     }
+
+
+
 }

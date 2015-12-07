@@ -3,10 +3,12 @@ package com.robots.we.parkme;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -66,6 +68,11 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
     public static CarParkViewBuilder CAR_PARK_VIEW_BUILDER;
 
     /**
+     * selected car park
+     */
+    public static String CURRENT_SELECTED_CAR_PARK;
+
+    /**
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
@@ -97,6 +104,16 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
 
         // build the action handler
         buildUserActionHandler();
+
+        // set current car park id
+        updateCurrentCarParkId();
+    }
+
+    private void updateCurrentCarParkId() {
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        CURRENT_SELECTED_CAR_PARK = sharedPreferences
+                .getString(UserPreferences.SELECTED_CAR_PARK_ID, null);
     }
 
     private void buildGPSTracker() {

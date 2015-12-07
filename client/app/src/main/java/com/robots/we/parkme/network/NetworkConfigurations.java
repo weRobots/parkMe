@@ -11,6 +11,7 @@ public class NetworkConfigurations {
     private static String REFRESH_PATH = "parkme/refresh/dorefresh?id=01";
     private static String LOAD_USER_PATH = "parkme/userService/readUser?userId=";
     private static String SAVE_USER_PATH = "parkme/userService/saveUser?";
+    private static String ALLOCATE_PATH = "parkme/carParkService/parkCare?";
 
     // refresh
     public static String URL_REFRESH = HOST_EMULATOR + REFRESH_PATH;
@@ -20,4 +21,7 @@ public class NetworkConfigurations {
 
     // save user
     public static String URL_SAVE_USER = HOST_EMULATOR + SAVE_USER_PATH;
+
+    // allocate
+    public static String URL_ALLOCATE = HOST_EMULATOR + SAVE_USER_PATH;
 }

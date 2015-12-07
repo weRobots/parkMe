@@ -1,5 +1,7 @@
 package com.robots.we.parkme.network;
 
+import com.robots.we.parkme.HomeActivity;
+import com.robots.we.parkme.beans.Slot;
 import com.robots.we.parkme.beans.User;
 
 import java.io.BufferedInputStream;
@@ -63,8 +65,21 @@ public class HttpRequestHandler {
         return downloadUrl(NetworkConfigurations.URL_SAVE_USER + param.toString());
     }
 
-    public static InputStream alocate(String id) throws IOException {
-        return downloadUrl(NetworkConfigurations.URL_LOAD_USER);
+    public static InputStream allocate(Slot slot) throws IOException {
+        StringBuilder param = new StringBuilder();
+        param.append("carParkId=");
+        param.append(HomeActivity.CURRENT_SELECTED_CAR_PARK);
+        param.append("&");
+        param.append("latitude=");
+        param.append(user.getVehichleNumber());
+        param.append("&");
+        param.append("longitude=");
+        param.append(user.getMobileNumber());
+        param.append("&");
+        param.append("slotId=");
+        param.append(user.getName());
+
+        return downloadUrl(NetworkConfigurations.URL_ALLOCATE + param.toString());
     }
 
     // Given a string representation of a URL, sets up a connection and gets

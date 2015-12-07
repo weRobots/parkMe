@@ -16,11 +16,16 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.robots.we.parkme.HomeActivity;
 import com.robots.we.parkme.R;
 import com.robots.we.parkme.UserPreferences;
 import com.robots.we.parkme.beans.User;
 import com.robots.we.parkme.AuthenticationHandler;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by suppa on 27/11/2015.
@@ -191,4 +196,6 @@ public class ConfigurationPage extends Fragment implements AuthenticationHandler
 
         }
     }
+
+
 }

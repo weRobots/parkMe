@@ -2,8 +2,10 @@ package com.robots.we.parkme.operate;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -14,9 +16,11 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import com.google.gson.Gson;
 import com.robots.we.parkme.AuthenticationHandler;
 import com.robots.we.parkme.HomeActivity;
 import com.robots.we.parkme.R;
+import com.robots.we.parkme.UserPreferences;
 import com.robots.we.parkme.beans.CarPark;
 import com.robots.we.parkme.beans.Slot;
 import com.robots.we.parkme.beans.SlotType;
@@ -28,6 +32,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -172,7 +177,6 @@ public class UserActionHandler {
         }
     }
 
-    //
     // task to load user
     private class allocateTask extends AsyncTask<Slot, Void, CarPark> {
 
@@ -180,14 +184,10 @@ public class UserActionHandler {
         protected CarPark doInBackground(Slot... slot) {
             try {
                 // create car park view again for the latest server information
-                InputStream result = HttpRequestHandler.alocate(slot[0]);
+                InputStream result = HttpRequestHandler.allocate(slot[0]);
                 return CarParkXMLParser.parse(result);
             } catch (IOException e) {
                 Log.i(TAG, "allocation unsuccessful");
-                return null;
-            } catch (XmlPullParserException e) {
-                Log.i(TAG, "allocation unsuccessful XML error");
-
                 return null;
             }
         }
@@ -200,4 +200,76 @@ public class UserActionHandler {
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // car park shared preferences related methods
+    public void saveFavorites(List<String> favorites) {
+
+        SharedPreferences.Editor editor;
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this.context);
+        editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String jsonCarParks = gson.toJson(favorites);
+
+        editor.putString(UserPreferences.CONFIGURED_CAR_PARK_IDS, jsonCarParks);
+        editor.commit();
+    }
+
+    private void addCarPark(String carPark) {
+        ArrayList<String> carParks = getCarParks();
+        if (carParks == null)
+            carParks = new ArrayList<String>();
+        carParks.add(carPark);
+        saveFavorites(carParks);
+    }
+
+    private void removeCarPark(String carPark) {
+        ArrayList<String> carParks = getCarParks();
+        if (carParks != null) {
+            carParks.remove(carPark);
+            saveFavorites(carParks);
+        }
+    }
+
+    private ArrayList<String> getCarParks() {
+
+        List<String> carParks;
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this.context);
+
+        if (sharedPreferences.contains(UserPreferences.CONFIGURED_CAR_PARK_IDS)) {
+            String jsonFavorites = sharedPreferences.getString(UserPreferences.CONFIGURED_CAR_PARK_IDS, null);
+            Gson gson = new Gson();
+            String[] carParkItems = gson.fromJson(jsonFavorites,
+                    String[].class);
+
+            carParks = Arrays.asList(carParkItems);
+            carParks = new ArrayList<String>(carParks);
+        } else
+            return null;
+
+        return (ArrayList<String>) carParks;
+    }
 }
