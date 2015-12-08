@@ -169,4 +169,30 @@ public class CarParkService {
 
 	}
 
+	@GET
+	@Path("/adminParkCare")
+	@Produces(MediaType.APPLICATION_XML)
+	public String adminParkCare(@QueryParam("carParkId") String carParkId,
+			@QueryParam("slotId") String slotId,
+			@QueryParam("mobile") String mobile) {
+		//
+		System.out.println("admin allocate process started...");
+
+		CarPark carPark = CommonUtil
+				.readObjectFromXMLForCarPark(CarParkFileHandler
+						.readCarPark(carParkId));
+
+		CarPark savedParkData = CarParkManager.getInstance().adminAllocateSlot(
+				carPark, slotId, mobile);
+
+		savedParkData.setOperationStatus(new OperationStatus(
+				OPERATION_STATUS.SUCCESS, "Successfully parked car"));
+
+		System.out.println(carPark.getId()
+				+ "[ Successfully parked car for admin given user for slot: "
+				+ slotId);
+
+		return CommonUtil.toXML(savedParkData);
+
+	}
 }

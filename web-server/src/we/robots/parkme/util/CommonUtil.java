@@ -21,7 +21,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.xml.sax.InputSource;
 
-import we.robots.parkme.common.ParkMeSaveData;
 import we.robots.parkme.park.CarPark;
 import we.robots.parkme.park.Slot;
 import we.robots.parkme.user.User;

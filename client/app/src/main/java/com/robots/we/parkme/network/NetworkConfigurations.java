@@ -16,6 +16,7 @@ public class NetworkConfigurations {
     private static String NOTIFY_PATH = "parkme/carParkService/sendUpdateToBlockingSlots?";
     private static String BLOCK_PATH = "parkme/carParkService/block?";
     private static String FIND_PATH = "parkme/carParkService/find?";
+    private static String ADMIN_ALLOCATE_PATH = "parkme/carParkService/adminParkCare?";
 
     // refresh
     public static String URL_REFRESH = HOST_WIFY + REFRESH_PATH;
@@ -40,4 +41,7 @@ public class NetworkConfigurations {
 
     // find
     public static String URL_FIND = HOST_WIFY + FIND_PATH;
+
+    // admin allocate
+    public static String URL_ADMIN_ALLOCATE = HOST_WIFY + ADMIN_ALLOCATE_PATH;
 }

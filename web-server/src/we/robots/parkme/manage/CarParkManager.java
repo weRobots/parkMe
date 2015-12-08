@@ -50,6 +50,31 @@ public class CarParkManager {
 		return carPark;
 	}
 
+	public CarPark adminAllocateSlot(CarPark carPark, String slotId,
+			String mobile) {
+
+		SlotAssistant slotAssistant = new SlotAssistant(
+				CommonUtil.convert(carPark.getSlots()));
+		Slot slot = slotAssistant.getSlot(slotId);
+		slot.setStatus(SlotStatus.ALLOCATED);
+
+		User user = UserHandler.findUserByMobile(mobile);
+
+		if (user != null) {
+			slot.setUser(user);
+			System.out.println("FOUND a matching user: " + user.getName());
+
+		} else {
+			// create temp user
+			User temp = new User();
+			temp.setMobileNumber(mobile);
+			temp.setName("Unidentified user");
+		}
+
+		CarParkFileHandler.save(carPark);
+		return carPark;
+	}
+
 	public CarPark releaseCar(CarPark carPark, String slotId) {
 		SlotAssistant slotAssistant = new SlotAssistant(
 				CommonUtil.convert(carPark.getSlots()));

@@ -72,6 +72,8 @@ public class UserActionHandler {
         popup.setHeight(200);
         popup.setFocusable(true);
         popup.setAnimationStyle(R.style.PopupWindowAnimation);
+        popup.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        popup.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
 
         // Clear the default translucent background
         popup.setBackgroundDrawable(new BitmapDrawable());
@@ -97,7 +99,7 @@ public class UserActionHandler {
             case ALLOCATED:
 
                 // view details
-                // TODO view
+                actions.add(new ActionPanel(context, v, -1, "", ActionPanel.ActionType.VIEW));
 
                 if (AuthenticationHandler.isAdmin())
                     // admin can release
@@ -106,11 +108,13 @@ public class UserActionHandler {
 
                 break;
             case AVAILABLE:
-                if (AuthenticationHandler.isAdmin())
+                actions.add(new ActionPanel(context, v, R.mipmap.allocate, "allocate for me", ActionPanel.ActionType.ALLOCATE));
+
+                if (AuthenticationHandler.isAdmin()) {
                     // admin can block
                     actions.add(new ActionPanel(context, v, R.mipmap.block, "block", ActionPanel.ActionType.BLOCK));
-
-                    actions.add(new ActionPanel(context, v, R.mipmap.allocate, "allocate for me", ActionPanel.ActionType.ALLOCATE));
+                    actions.add(new ActionPanel(context, v, R.mipmap.allocate, "", ActionPanel.ActionType.ADMIN_ALLOCATE));
+                }
 
                 break;
             case BLOCKED:
@@ -120,10 +124,9 @@ public class UserActionHandler {
 
                 else
                     // view details
-                    // TODO view
-                    break;
+                    actions.add(new ActionPanel(context, v, -1, "", ActionPanel.ActionType.VIEW));
+                break;
         }
-
 
         // add action performer
         for (ActionPanel actionPanel :

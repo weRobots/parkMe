@@ -173,6 +173,24 @@ public class HttpRequestHandler {
         return downloadUrl(NetworkConfigurations.URL_BLOCK + param.toString());
     }
 
+    /**
+     * @param slotId
+     * @return
+     * @throws IOException
+     */
+    public static InputStream adminAllocate(String slotId, String mobile) throws IOException {
+        StringBuilder param = new StringBuilder();
+        param.append("carParkId=");
+        param.append(HomeActivity.CURRENT_SELECTED_CAR_PARK);
+        param.append("&");
+        param.append("slotId=");
+        param.append(slotId);
+        param.append("&");
+        param.append("mobile=");
+        param.append(mobile);
+
+        return downloadUrl(NetworkConfigurations.URL_ADMIN_ALLOCATE + param.toString());
+    }
 
     // Given a string representation of a URL, sets up a connection and gets
     // an input stream.

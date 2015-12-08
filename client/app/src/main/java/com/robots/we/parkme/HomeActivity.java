@@ -302,7 +302,6 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
         }
     }
 
-
     @Override
     protected void onStop() {
         super.onStop();
