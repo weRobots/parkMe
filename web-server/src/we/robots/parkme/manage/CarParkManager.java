@@ -103,10 +103,11 @@ public class CarParkManager {
 			return true;
 		}
 
-		System.out.println("parakable result: unsuccessful for parck[lat:"
+		System.out.println("parakable result: unsuccessful distance["
+				+ distance + "] for parck[lat:"
 				+ carPark.getCenterLocationLat() + " long:"
-				+ carPark.getCenterLocationLog() + " id: "+ carPark.getId()+ "]"+ " for user lat: " + lat
-				+ " long: " + longi);
+				+ carPark.getCenterLocationLog() + " id: " + carPark.getId()
+				+ "]" + " for user lat: " + lat + " long: " + longi);
 
 		return false;
 	}
