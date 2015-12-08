@@ -1,13 +1,11 @@
 package we.robots.parkme.util;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -63,22 +61,19 @@ public final class CommonUtil {
 				set.add(element);
 			}
 		}
-
-		throw new IllegalArgumentException("arguments are not valid for the operation");
 	}
 
 	/**
 	 * @param set
 	 * @param element
 	 */
-	public static void addAllSafely(final Set<Slot> set, final Set<Slot> elements) {
+	public static void addAllSafely(final Set<Slot> set,
+			final Set<Slot> elements) {
 		if (checkNotNull(set)) {
 			if (checkNotNullAndNotEmpty(elements)) {
 				set.addAll(elements);
 			}
 		}
-
-		throw new IllegalArgumentException("arguments are not valid for the operation");
 	}
 
 	/**
@@ -107,7 +102,7 @@ public final class CommonUtil {
 		return formatXml(xstream.toXML(data));
 	}
 
-	public static String toXML(ParkMeSaveData data) {
+	public static String toXML(User data) {
 		XStream xstream = new XStream(new StaxDriver());
 		xstream.autodetectAnnotations(true);
 		return formatXml(xstream.toXML(data));
@@ -116,17 +111,22 @@ public final class CommonUtil {
 	public static String formatXml(String xml) {
 
 		try {
-			Transformer serializer = SAXTransformerFactory.newInstance().newTransformer();
+			Transformer serializer = SAXTransformerFactory.newInstance()
+					.newTransformer();
 
 			serializer.setOutputProperty(OutputKeys.INDENT, "yes");
-			serializer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+			serializer.setOutputProperty(
+					"{http://xml.apache.org/xslt}indent-amount", "2");
 
-			Source xmlSource = new SAXSource(new InputSource(new ByteArrayInputStream(xml.getBytes())));
+			Source xmlSource = new SAXSource(new InputSource(
+					new ByteArrayInputStream(xml.getBytes())));
 			StreamResult res = new StreamResult(new ByteArrayOutputStream());
 
 			serializer.transform(xmlSource, res);
 
-			return new String(((ByteArrayOutputStream) res.getOutputStream()).toByteArray());
+			return new String(
+					((ByteArrayOutputStream) res.getOutputStream())
+							.toByteArray());
 
 		} catch (Exception e) {
 			return xml;
@@ -163,7 +163,7 @@ public final class CommonUtil {
 
 	public static User readObjectFromXMLForUser(String xml) {
 
-		XStream xstream = new XStream();
+		XStream xstream = new XStream(new StaxDriver());
 		xstream.processAnnotations(User.class); // inform XStream to parse
 												// annotations in Data class
 
@@ -174,7 +174,7 @@ public final class CommonUtil {
 
 	public static CarPark readObjectFromXMLForCarPark(String xml) {
 
-		XStream xstream = new XStream();
+		XStream xstream = new XStream(new StaxDriver());
 		xstream.processAnnotations(CarPark.class); // inform XStream to parse
 													// annotations in Data class
 
@@ -185,7 +185,7 @@ public final class CommonUtil {
 
 	public static List<CarPark> readCarParkList(String xml) {
 
-		XStream xstream = new XStream();
+		XStream xstream = new XStream(new StaxDriver());
 		xstream.processAnnotations(CarPark.class); // inform XStream to parse
 													// annotations in Data class
 

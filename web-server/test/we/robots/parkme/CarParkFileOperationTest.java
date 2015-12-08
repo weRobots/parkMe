@@ -39,16 +39,16 @@ public class CarParkFileOperationTest {
 		final CarPark office_main = new CarPark();
 		office_main.setId("cambio_main");
 		office_main.setAdmin(createAdmin("admin_01", "cambio_29_admin"));
-		office_main.setCenterLocationLat("1234365324");
-		office_main.setCenterLocationLog("786782345234");
+		office_main.setCenterLocationLat("6.907062");
+		office_main.setCenterLocationLog("79.853669");
 		all_configured.add(office_main);
 
 		//
 		final CarPark office_09 = new CarPark();
 		office_09.setId("cambio_09");
 		office_09.setAdmin(createAdmin("admin_02", "cambio_09_admin"));
-		office_09.setCenterLocationLat("1234365324");
-		office_09.setCenterLocationLog("786782345234");
+		office_09.setCenterLocationLat("6.9068317");
+		office_09.setCenterLocationLog("6.9068317");
 		all_configured.add(office_09);
 
 		CarParkFileHandler.saveAllConfigured(all_configured);
@@ -59,8 +59,8 @@ public class CarParkFileOperationTest {
 		final CarPark office = new CarPark();
 		office.setId("cambio_09");
 		office.setAdmin(createAdmin("admin_02", "cambio_09_admin"));
-		office.setCenterLocationLat("1234365324");
-		office.setCenterLocationLog("786782345234");
+		office.setCenterLocationLat("6.9068317");
+		office.setCenterLocationLog("79.8529107");
 		final HashSet<Slot> slots = new HashSet<Slot>();
 
 		for (int i = 1; i < 13; i++) {
@@ -133,9 +133,9 @@ public class CarParkFileOperationTest {
 
 		// slot 10
 		final Slot slot_10 = slotAssistant.getSlot("10");
-		slot_10.setColumnIndex(0);
+		slot_10.setColumnIndex(2);
 		slot_10.setRawIndex(6);
-		setNabours(slot_10, 3, null, null, "6", "6", "11", "12", "9", "9");
+		setNabours(slot_10, 3, null, null, "6", "6", "11", "12", "9", "9");	
 
 		// slot 11
 		final Slot slot_11 = slotAssistant.getSlot("11");
@@ -161,8 +161,8 @@ public class CarParkFileOperationTest {
 		final CarPark office = new CarPark();
 		office.setId("cambio_main");
 		office.setAdmin(createAdmin("admin_01", "cambio_29_admin"));
-		office.setCenterLocationLat("1234365324");
-		office.setCenterLocationLog("786782345234");
+		office.setCenterLocationLat("34.9068317");
+		office.setCenterLocationLog("6.8529107");
 		final HashSet<Slot> slots = new HashSet<Slot>();
 
 		for (int i = 1; i < 21; i++) {

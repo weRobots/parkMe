@@ -3,6 +3,7 @@ package we.robots.parkme.messaging;
 import java.util.HashSet;
 import java.util.Set;
 
+import we.robots.parkme.messaging.gsm.CloudMessageSender;
 import we.robots.parkme.park.Slot;
 import we.robots.parkme.user.User;
 

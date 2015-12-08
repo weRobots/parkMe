@@ -1,12 +1,12 @@
 /**
  * Copyright 2015 Google Inc. All Rights Reserved.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,7 +17,6 @@
 package gcm.play.android.samples.com.gcmsender;
 
 import org.apache.commons.io.IOUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -54,7 +53,7 @@ public class GcmSender {
             jData.put("message", args[0].trim());
             // Where to send GCM message.
 
-                jGcmData.put("to", "dZPTe36W-9I:APA91bGt7mNiggn1BIZPfsB3kFszEHAGw2uRVqxhG_tmiOxTgtHCNSDRCGB62lDvNhApAiG5BAEhOi09CajmGBGmX2XbiX6PoO6xY9nOB56zssk0QrG-68c0Se1G6ziEQaNtg31_GXGY");
+            jGcmData.put("to", "e_JGyiYmRKg:APA91bG6F-g-m1dT4wnX3pKmi5v4XfooqbFuROXcVgCeiae5R_bSzupn_gmY5NWeYH1E1xpmAxmixBTdw3FgMxXjcuDV6svwkCcXKH8JqSwCo4_YkVz4-ZLchf8WrSXOoE3o2x3x_k8h");
 
             // What to send in GCM message.
             jGcmData.put("data", jData);

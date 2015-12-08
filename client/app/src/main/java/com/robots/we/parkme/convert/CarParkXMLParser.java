@@ -146,6 +146,10 @@ public class CarParkXMLParser {
             else if (name.equals(Tags.NAVIGATION)) {
                 slot.setNavigationDetail(readNavigation(parser));
             }
+            // user
+            else if (name.equals(Tags.USER)) {
+                slot.setUser(UserXMLParser.readUser(parser));
+            }
             // other tags not concerned
             else {
                 skip(parser);

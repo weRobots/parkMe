@@ -6,7 +6,9 @@ import android.graphics.Color;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 
+import com.robots.we.parkme.AuthenticationHandler;
 import com.robots.we.parkme.beans.Slot;
+import com.robots.we.parkme.beans.SlotStatus;
 
 /**
  * Created by supun.hettigoda on 11/30/2015.
@@ -34,8 +36,25 @@ public class SlotView extends ImageView {
 
     private void setUI() {
         //setImageResource(R.drawable);
-        setBackgroundColor(Color.GREEN);
+        switch (this.slot.getStatus()) {
+            case BLOCKED:
+                setBackgroundColor(Color.BLACK);
+                break;
+            case AVAILABLE:
+                setBackgroundColor(Color.GREEN);
+                break;
+            case ALLOCATED:
+                if (isMySlot()) {
+                    setBackgroundColor(Color.YELLOW);
+                    this.slot.setStatus(SlotStatus.MY_SLOT);
+                    break;
+                }
+
+                setBackgroundColor(Color.RED);
+                break;
+        }
     }
+
 
     private void setBounds() {
         GridLayout.LayoutParams param = new GridLayout.LayoutParams();
@@ -58,6 +77,10 @@ public class SlotView extends ImageView {
         }
 
         setLayoutParams(param);
+    }
+
+    private boolean isMySlot() {
+        return (this.slot.getUser().getUserId().equals(AuthenticationHandler.USER.getUserId()));
     }
 
     /**

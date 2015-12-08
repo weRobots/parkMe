@@ -53,7 +53,8 @@
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"></RadioGroup>
+                android:orientation="vertical"
+                android:id="@+id/park_list_radio"></RadioGroup>
         </ScrollView>
 
         <Button

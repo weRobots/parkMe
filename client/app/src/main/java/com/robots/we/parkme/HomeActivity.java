@@ -1,5 +1,6 @@
 package com.robots.we.parkme;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -10,14 +11,20 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.gcm.play.android.GCMPreferences;
 import com.gcm.play.android.GSMActivity;
+import com.gcm.play.android.RegistrationIntentService;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.robots.we.parkme.beans.CarPark;
 import com.robots.we.parkme.convert.CarParkXMLParser;
 import com.robots.we.parkme.gps.GPSTracker;
@@ -32,6 +39,7 @@ import java.io.InputStream;
 
 public class HomeActivity extends AppCompatActivity implements NetworkConnectivityReceiver.ConnectivityStatusChangedListener, CarParkGridLayout.SlotClickListener {
 
+    private static final String TAG = "HomeActivity";
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -77,12 +85,23 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
      */
     private ViewPager mViewPager;
 
+    /**
+     * GCM
+     */
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
+
+    /**
+     * tool bar
+     */
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
 
         // Create the adapter that will return a fragment for each of the three
@@ -106,14 +125,60 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
         buildUserActionHandler();
 
         // set current car park id
-        updateCurrentCarParkId();
+        updateToCurrentCarPark();
+
+        // GCM reciever
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // nothing
+            }
+        };
+
+        // register to the GCM if no token recieved yet
+        registerIfNot();
     }
 
-    private void updateCurrentCarParkId() {
+    /**
+     * register to GCM if not
+     */
+    public void registerIfNot() {
+        // GCM registration
+        if (getStoredToken().isEmpty() && checkPlayServices()) {
+            // Start IntentService to register this application with GCM.
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
+    }
+
+    /**
+     * Gets the current registration token for application on GCM service.
+     * <p/>
+     * If result is empty, the app needs to register.
+     *
+     * @return registration token, or empty string if there is no existing
+     * registration token.
+     */
+    private String getStoredToken() {
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        String registrationId = sharedPreferences.getString(GCMPreferences.TOKEN, "");
+
+        return registrationId;
+    }
+
+    public void updateToCurrentCarPark() {
         SharedPreferences sharedPreferences =
                 PreferenceManager.getDefaultSharedPreferences(this);
         CURRENT_SELECTED_CAR_PARK = sharedPreferences
                 .getString(UserPreferences.SELECTED_CAR_PARK_ID, null);
+
+        // set car park name to selected car park id
+        String title = CURRENT_SELECTED_CAR_PARK;
+        if (title != null)
+            toolbar.setTitle(title);
+        else
+            toolbar.setTitle("select");
     }
 
     private void buildGPSTracker() {
@@ -128,9 +193,6 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
     @Override
     public void onStart() {
         super.onStart();
-
-        // start gps tracking
-        GPS_TRACKER.start();
 
         // update data connection availability on start up
         updateConnectedFlags();
@@ -225,7 +287,7 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
         protected CarPark doInBackground(Void... urls) {
             try {
                 // create car park view again for the latest server information
-                InputStream result = HttpRequestHandler.refresh();
+                InputStream result = HttpRequestHandler.refresh(CURRENT_SELECTED_CAR_PARK);
                 return CarParkXMLParser.parse(result);
             } catch (IOException e) {
                 return null;
@@ -244,7 +306,6 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
     @Override
     protected void onStop() {
         super.onStop();
-        GPS_TRACKER.stop();
     }
 
     /**
@@ -261,5 +322,39 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
      */
     public void registerCarParkViewBuilder(CarParkViewBuilder carParkViewBuilder) {
         this.CAR_PARK_VIEW_BUILDER = carParkViewBuilder;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(GCMPreferences.REGISTRATION_COMPLETE));
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        super.onPause();
+    }
+
+    /**
+     * Check the device to make sure it has the Google Play Services APK. If
+     * it doesn't, display a dialog that allows users to download the APK from
+     * the Google Play Store or enable it in the device's system settings.
+     */
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 }

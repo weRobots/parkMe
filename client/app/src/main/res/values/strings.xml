@@ -4,6 +4,7 @@
     <string name="connection_ok">connected</string>
     <string name="connection_lost">disconnected.</string>
     <string name="connection_error">Unable to load content. Check your network connection.</string>
+    <string name="location_service_error">Unable to get location data. please check your location service</string>
     <string name="user_operations">user operations</string>
     <string name="configurations">configurations</string>
     <string name="admin_operations">Admin operations</string>

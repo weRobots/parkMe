@@ -1,24 +1,27 @@
 package we.robots.parkme.messaging.mms;
 
-public interface MMS {
-	public static final String FROM_ADDRESS = "ADMINISTRATOR.CADD.TEAM8";
+public interface MMS
+{
+  String FROM_ADDRESS = "ADMINISTRATOR.CADD.TEAM8";
 
-	public static final String MMS_DOMAIN_DIALOG = "@mms.dialog.lk";
+  String MMS_DOMAIN_DIALOG = "@mms.dialog.lk";
 
-	public static final String MMS_DOMAIN_MOBITEL = "@mms.mobitel.lk";
+  String MMS_DOMAIN_MOBITEL = "@mms.mobitel.lk";
+  
+  String SERVICE_PROVIDER_MOBITEL = "71";
+  
+  String SERVICE_PROVIDER_DIALOG = "77";
+  
+  String TELE_CODE_SRL = "94";
 
-	public static final String SERVICE_PROVIDER_MOBITEL = "71";
+  int MESSAGE_TYPE_REMOVE_YOUR_CAR = 1;
 
-	public static final String SERVICE_PROVIDER_DIALOG = "77";
+  int MESSAGE_TYPE_NO_PARKING_SLOTS_AVAILABLE = 2;
 
-	public static final String TELE_CODE_SRL = "94";
+  String getToAddress();
 
-	public static final int MESSAGE_TYPE_REMOVE_YOUR_CAR = 1;
+  String getSubject();
 
-	String getToAddress();
-
-	String getSubject();
-
-	String getText();
+  String getText();
 
 }

@@ -91,11 +91,10 @@ public final class AuthenticationHandler {
         protected void onPostExecute(User user) {
             Log.i(TAG, "user:" + user.getName() + " , role:" + user.getRole() + " authenticated");
             AuthenticationHandler.USER = user;
-            USER_PROFILE_BUILDER.buildUserProfile();
             USER_PROFILE_BUILDER.updatePreferenceData();
+            USER_PROFILE_BUILDER.buildUserProfile();
         }
     }
-
 
     /**
      * to register the  user profile builder

@@ -54,13 +54,13 @@ public class GSMActivity extends AppCompatActivity {
                 mRegistrationProgressBar.setVisibility(ProgressBar.GONE);
                 SharedPreferences sharedPreferences =
                         PreferenceManager.getDefaultSharedPreferences(context);
-                boolean sentToken = sharedPreferences
-                        .getBoolean(GCMPreferences.SENT_TOKEN_TO_SERVER, false);
-                if (sentToken) {
+               /* boolean sentToken = sharedPreferences
+                        .getBoolean(GCMPreferences.SENT_TOKEN_TO_SERVER, false);*/
+                /*if (sentToken) {
                     mInformationTextView.setText(getString(R.string.gcm_send_message));
                 } else {
                     mInformationTextView.setText(getString(R.string.token_error_message));
-                }
+                }*/
             }
         };
         mInformationTextView = (TextView) findViewById(R.id.informationTextView);

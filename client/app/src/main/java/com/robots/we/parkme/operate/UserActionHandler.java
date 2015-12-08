@@ -1,11 +1,9 @@
 package com.robots.we.parkme.operate;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Location;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -15,24 +13,19 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.robots.we.parkme.AuthenticationHandler;
 import com.robots.we.parkme.HomeActivity;
 import com.robots.we.parkme.R;
-import com.robots.we.parkme.UserPreferences;
 import com.robots.we.parkme.beans.CarPark;
 import com.robots.we.parkme.beans.Slot;
-import com.robots.we.parkme.beans.SlotType;
 import com.robots.we.parkme.convert.CarParkXMLParser;
 import com.robots.we.parkme.network.HttpRequestHandler;
-
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -44,6 +37,10 @@ public class UserActionHandler {
 
     private static final String TAG = "UserActionHandler";
     private final HomeActivity context;
+
+    // current location
+    String latitude;
+    String longitude;
 
 
     public UserActionHandler(HomeActivity context) {
@@ -113,7 +110,6 @@ public class UserActionHandler {
                     // admin can block
                     actions.add(new ActionPanel(context, v, R.mipmap.block, "block", ActionPanel.ActionType.BLOCK));
 
-                else
                     actions.add(new ActionPanel(context, v, R.mipmap.allocate, "allocate for me", ActionPanel.ActionType.ALLOCATE));
 
                 break;
@@ -152,40 +148,66 @@ public class UserActionHandler {
         LayoutInflater layoutInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout layout = (LinearLayout) layoutInflater.inflate(R.layout.popup_layout, viewGroup);
+        layout.setOrientation(LinearLayout.VERTICAL);
 
-        // action param
-        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
         for (ActionPanel action :
                 actionList) {
+
+            // action param
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layout.addView(action, param);
         }
 
         return layout;
     }
 
+
     private void handleActionPerformed(ActionPanel actionPanel) {
+
+        // only if network data available
+        if (!HomeActivity.DATA_CONNECTED) {
+            showNetworkError();
+            return;
+        }
+
         switch (actionPanel.getActionType()) {
             case ALLOCATE:
-                actionPanel.getSlot();
+
+                // perform further if only location data available
+                if (!HomeActivity.GPS_TRACKER.canGetLocation()) {
+                    showLocationError();
+                    return;
+                }
+
+                // get current location
+                Location location = HomeActivity.GPS_TRACKER.getLocation();
+                latitude = Double.toString(location.getLatitude());
+                longitude = Double.toString(location.getLongitude());
+
+                new AllocateTask().execute(actionPanel.getSlot());
                 break;
             case BLOCK:
+                new BlockTask().execute(actionPanel.getSlot());
                 break;
             case RELEASE:
+                new ReleaseTask().execute(actionPanel.getSlot());
                 break;
             case SEND_NOTIFICATION:
+                new NotifyTask().execute(actionPanel.getSlot());
                 break;
         }
     }
 
-    // task to load user
-    private class allocateTask extends AsyncTask<Slot, Void, CarPark> {
+    // task to allocate
+    private class AllocateTask extends AsyncTask<Slot, Void, CarPark> {
 
         @Override
         protected CarPark doInBackground(Slot... slot) {
             try {
-                // create car park view again for the latest server information
-                InputStream result = HttpRequestHandler.allocate(slot[0]);
+                InputStream result = HttpRequestHandler.allocate(slot[0], latitude, longitude);
                 return CarParkXMLParser.parse(result);
+
             } catch (IOException e) {
                 Log.i(TAG, "allocation unsuccessful");
                 return null;
@@ -194,82 +216,105 @@ public class UserActionHandler {
 
         @Override
         protected void onPostExecute(CarPark carPark) {
-            Log.i(TAG, "allocation success..");
+            if (carPark == null)
+                Log.i(TAG, "allocation action fail ..");
+            else {
+                Log.i(TAG, "allocation action success ..");
+                HomeActivity.CAR_PARK_VIEW_BUILDER.build(carPark);
+            }
+        }
+    }
+
+    // task to release
+    private class ReleaseTask extends AsyncTask<Slot, Void, CarPark> {
+
+        @Override
+        protected CarPark doInBackground(Slot... slot) {
+            try {
+                InputStream result = HttpRequestHandler.release(slot[0]);
+                return CarParkXMLParser.parse(result);
+
+            } catch (IOException e) {
+                Log.i(TAG, "allocation unsuccessful");
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(CarPark carPark) {
+            if (carPark == null)
+                Log.i(TAG, "release action fail ..");
+            else {
+                Log.i(TAG, "release action success ..");
+                HomeActivity.CAR_PARK_VIEW_BUILDER.build(carPark);
+            }
+
+        }
+    }
+
+    // task to notify blockers
+    private class NotifyTask extends AsyncTask<Slot, Void, CarPark> {
+
+        @Override
+        protected CarPark doInBackground(Slot... slot) {
+            try {
+                InputStream result = HttpRequestHandler.notify(slot[0]);
+                return CarParkXMLParser.parse(result);
+
+            } catch (IOException e) {
+                Log.i(TAG, "notify blocking users unsuccessful");
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(CarPark carPark) {
+            if (carPark == null)
+                Log.i(TAG, "notify blocking users action fail ..");
+            else {
+                Log.i(TAG, "notify blocking users action success ..");
+                HomeActivity.CAR_PARK_VIEW_BUILDER.build(carPark);
+            }
+        }
+    }
+
+    // task to notify blockers
+    private class BlockTask extends AsyncTask<Slot, Void, CarPark> {
+
+        @Override
+        protected CarPark doInBackground(Slot... slot) {
+            try {
+                InputStream result = HttpRequestHandler.block(slot[0]);
+                return CarParkXMLParser.parse(result);
+
+            } catch (IOException e) {
+                Log.i(TAG, "Block slot unsuccessful");
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(CarPark carPark) {
+            if (carPark == null)
+                Log.i(TAG, "Block slot action fail ..");
+            else {
+                Log.i(TAG, "Block slot action success ..");
+                HomeActivity.CAR_PARK_VIEW_BUILDER.build(carPark);
+            }
 
         }
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // car park shared preferences related methods
-    public void saveFavorites(List<String> favorites) {
-
-        SharedPreferences.Editor editor;
-        SharedPreferences sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(this.context);
-        editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String jsonCarParks = gson.toJson(favorites);
-
-        editor.putString(UserPreferences.CONFIGURED_CAR_PARK_IDS, jsonCarParks);
-        editor.commit();
+    // Displays an error if the app is unable to load content.
+    private void showNetworkError() {
+        // The specified network connection is not available. Displays error message.
+        Toast.makeText(this.context, R.string.connection_error, Toast.LENGTH_SHORT).show();
     }
 
-    private void addCarPark(String carPark) {
-        ArrayList<String> carParks = getCarParks();
-        if (carParks == null)
-            carParks = new ArrayList<String>();
-        carParks.add(carPark);
-        saveFavorites(carParks);
-    }
-
-    private void removeCarPark(String carPark) {
-        ArrayList<String> carParks = getCarParks();
-        if (carParks != null) {
-            carParks.remove(carPark);
-            saveFavorites(carParks);
-        }
-    }
-
-    private ArrayList<String> getCarParks() {
-
-        List<String> carParks;
-        SharedPreferences sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(this.context);
-
-        if (sharedPreferences.contains(UserPreferences.CONFIGURED_CAR_PARK_IDS)) {
-            String jsonFavorites = sharedPreferences.getString(UserPreferences.CONFIGURED_CAR_PARK_IDS, null);
-            Gson gson = new Gson();
-            String[] carParkItems = gson.fromJson(jsonFavorites,
-                    String[].class);
-
-            carParks = Arrays.asList(carParkItems);
-            carParks = new ArrayList<String>(carParks);
-        } else
-            return null;
-
-        return (ArrayList<String>) carParks;
+    // Displays an error if the app is unable to get location.
+    private void showLocationError() {
+        // The specified network connection is not available. Displays error message.
+        Toast.makeText(this.context, R.string.location_service_error, Toast.LENGTH_SHORT).show();
     }
 }

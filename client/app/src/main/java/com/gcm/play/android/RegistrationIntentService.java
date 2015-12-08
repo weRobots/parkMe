@@ -25,7 +25,11 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
+import com.robots.we.parkme.AuthenticationHandler;
 import com.robots.we.parkme.R;
+import com.robots.we.parkme.network.HttpRequestHandler;
+
+import java.io.IOException;
 
 public class RegistrationIntentService extends IntentService {
 
@@ -58,13 +62,11 @@ public class RegistrationIntentService extends IntentService {
             // You should store a boolean that indicates whether the generated token has been
             // sent to your server. If the boolean is false, send the token to your server,
             // otherwise your server should have already received the token.
-            sharedPreferences.edit().putBoolean(GCMPreferences.SENT_TOKEN_TO_SERVER, true).apply();
+            sharedPreferences.edit().putString(GCMPreferences.TOKEN, token).apply();
             // [END register_for_gcm]
+
         } catch (Exception e) {
             Log.d(TAG, "Failed to complete token refresh", e);
-            // If an exception happens while fetching the new token or updating our registration data
-            // on a third-party server, this ensures that we'll attempt the update at a later time.
-            sharedPreferences.edit().putBoolean(GCMPreferences.SENT_TOKEN_TO_SERVER, false).apply();
         }
         // Notify UI that registration has completed, so the progress indicator can be hidden.
         Intent registrationComplete = new Intent(GCMPreferences.REGISTRATION_COMPLETE);
@@ -80,6 +82,16 @@ public class RegistrationIntentService extends IntentService {
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token) {
-        // Add custom implementation, as needed.
+        // if user available then save
+        if (AuthenticationHandler.USER != null) {
+            if ((AuthenticationHandler.USER.getUserId() != null) || !AuthenticationHandler.USER.getUserId().isEmpty()) {
+                AuthenticationHandler.USER.setRegistrationToken(token);
+                try {
+                    HttpRequestHandler.save(AuthenticationHandler.USER);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

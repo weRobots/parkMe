@@ -30,7 +30,7 @@ public class UserXMLParser {
 
     }
 
-    private static User readUser(XmlPullParser parser) throws XmlPullParserException, IOException {
+    public static User readUser(XmlPullParser parser) throws XmlPullParserException, IOException {
 
         // map xml data to the CarPark bean
         User user = new User();
