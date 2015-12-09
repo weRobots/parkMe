@@ -69,6 +69,7 @@ public class CarParkManager {
 			User temp = new User();
 			temp.setMobileNumber(mobile);
 			temp.setName("Unidentified user");
+			slot.setUser(temp);
 		}
 
 		CarParkFileHandler.save(carPark);

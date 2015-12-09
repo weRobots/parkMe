@@ -31,15 +31,6 @@
             </intent-filter>
         </activity>
 
-        <!-- test GSM -->
-        <activity
-            android:name="com.gcm.play.android.GSMActivity"
-            android:parentActivityName=".HomeActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeActivity" />
-        </activity>
-
         <!--  gcm_receiver -->
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"

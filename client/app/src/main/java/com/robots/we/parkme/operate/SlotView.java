@@ -3,8 +3,9 @@ package com.robots.we.parkme.operate;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.view.Gravity;
 import android.widget.GridLayout;
-import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.robots.we.parkme.AuthenticationHandler;
 import com.robots.we.parkme.beans.Slot;
@@ -13,7 +14,7 @@ import com.robots.we.parkme.beans.SlotStatus;
 /**
  * Created by supun.hettigoda on 11/30/2015.
  */
-public class SlotView extends ImageView {
+public class SlotView extends TextView {
     private final Slot slot;
     private final int gridScale;
 
@@ -76,11 +77,13 @@ public class SlotView extends ImageView {
                 break;
         }
 
+        setText(this.slot.getId());
+        setGravity(Gravity.CENTER);
         setLayoutParams(param);
     }
 
     private boolean isMySlot() {
-        return (this.slot.getUser().getUserId().equals(AuthenticationHandler.USER.getUserId()));
+        return (AuthenticationHandler.USER.getUserId().equals(this.slot.getUser().getUserId()));
     }
 
     /**

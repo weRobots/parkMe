@@ -179,14 +179,17 @@ public class UserActionHandler {
 
                 // perform further if only location data available
                 if (!HomeActivity.GPS_TRACKER.canGetLocation()) {
-                    showLocationError();
+                    HomeActivity.GPS_TRACKER.showSettingsAlert();
                     return;
                 }
 
                 // get current location
                 Location location = HomeActivity.GPS_TRACKER.getLocation();
-                latitude = Double.toString(location.getLatitude());
-                longitude = Double.toString(location.getLongitude());
+
+                if (location != null) {
+                    latitude = Double.toString(location.getLatitude());
+                    longitude = Double.toString(location.getLongitude());
+                }
 
                 new AllocateTask().execute(actionPanel.getSlot());
                 break;

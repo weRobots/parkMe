@@ -27,7 +27,6 @@ public final class AuthenticationHandler {
      */
     private static UserProfileBuilder USER_PROFILE_BUILDER;
 
-
     public static boolean isAdmin() {
         return (AuthenticationHandler.USER.getRole() == UserRole.ADMIN);
     }
@@ -113,4 +112,5 @@ public final class AuthenticationHandler {
 
         void updatePreferenceData();
     }
+    
 }

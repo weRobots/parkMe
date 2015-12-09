@@ -21,7 +21,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.gcm.play.android.GCMPreferences;
-import com.gcm.play.android.GSMActivity;
 import com.gcm.play.android.RegistrationIntentService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -236,10 +235,7 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.action_map:
-
-                Intent intent = new Intent(this, GSMActivity.class);
-                startActivity(intent);
-
+                break;
             case R.id.action_refresh:
                 refreshUserOperationPage();
                 break;
@@ -259,15 +255,16 @@ public class HomeActivity extends AppCompatActivity implements NetworkConnectivi
 
     @Override
     public void ConnectivityStatusChanged(NetworkConnectivityReceiver.ConnectivityStatus status) {
-/*        switch (status) {
+        switch (status) {
             case CONNECTED:
-                dataConnected = true;
+                DATA_CONNECTED = true;
                 Toast.makeText(getApplicationContext(), R.string.connection_ok, Toast.LENGTH_SHORT).show();
+                break;
             case DISCONNECTED:
                 Toast.makeText(getApplicationContext(), R.string.connection_lost, Toast.LENGTH_SHORT).show();
-                dataConnected = false;
-        }*/
-        DATA_CONNECTED = true;
+                DATA_CONNECTED = false;
+                break;
+        }
     }
 
     @Override

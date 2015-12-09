@@ -33,10 +33,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.robots.we.parkme.R;
 
-public class GSMActivity extends AppCompatActivity {
+public class GSMTActivity extends AppCompatActivity {
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private static final String TAG = "GSMActivity";
+    private static final String TAG = "GSMTActivity";
 
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private ProgressBar mRegistrationProgressBar;

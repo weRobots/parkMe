@@ -53,7 +53,7 @@ public class GcmSender {
             jData.put("message", args[0].trim());
             // Where to send GCM message.
 
-            jGcmData.put("to", "e_JGyiYmRKg:APA91bG6F-g-m1dT4wnX3pKmi5v4XfooqbFuROXcVgCeiae5R_bSzupn_gmY5NWeYH1E1xpmAxmixBTdw3FgMxXjcuDV6svwkCcXKH8JqSwCo4_YkVz4-ZLchf8WrSXOoE3o2x3x_k8h");
+            jGcmData.put("to", "epekUm2E0zE:APA91bGeFGsSzW5TPSLdxOtQoMBlcKOZMEJ91lyuGfiTRSs3dxFKFpODO4rtiSfopKtdvL2YrucWqMgfQntOJZuL4Poh7vFNDrvPe7RZw3BGaa6alM7q9qN4F32bKIAyppCiliOaYpM0");
 
             // What to send in GCM message.
             jGcmData.put("data", jData);

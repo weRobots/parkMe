@@ -245,15 +245,17 @@ public class ConfigurationPage extends Fragment implements AuthenticationHandler
 
         // perform further if only location data available
         if (!HomeActivity.GPS_TRACKER.canGetLocation()) {
-            showLocationError();
+            HomeActivity.GPS_TRACKER.showSettingsAlert();
             return;
         }
 
         // get current location
         Location location = HomeActivity.GPS_TRACKER.getLocation();
 
-        new FindTask().execute(new String[]{Double.toString(location.getLatitude()), Double.toString(location.getLongitude())});
-
+        if (location != null)
+                new FindTask().execute(new String[]{Double.toString(location.getLatitude()), Double.toString(location.getLongitude())});
+        else
+            showLocationError();
     }
 
     // task to release
